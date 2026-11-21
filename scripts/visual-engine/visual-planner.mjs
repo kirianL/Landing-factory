@@ -11,7 +11,7 @@ const SECTION_RULES = {
     purpose: 'Composición visual principal que ancla la propuesta de valor above-the-fold',
     assetType: 'conceptual_photo',
     aspectRatio: '16:9',
-    dimensions: '1365x1024',
+    dimensions: '1344x768',
     priority: 'critical',
     qualityTier: 'high',
   },

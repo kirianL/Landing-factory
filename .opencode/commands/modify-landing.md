@@ -42,9 +42,14 @@ Clasifica la solicitud en uno de estos niveles para dimensionar el análisis:
 ### Reglas de delegación y fallback inteligente
 1. Lanza los análisis independientes en paralelo cuando sea posible, pasando únicamente el contexto concreto de la solicitud y los archivos afectados.
 2. Todos los especialistas trabajan en modo **solo lectura** (`edit: deny`, `write: deny`): devuelven hallazgos y recomendaciones; nunca editan archivos.
-3. **Resiliencia y Fallback Dinámico**:
-   - Antes de delegar a `opencode_2`, consulta `orchestrator_capabilities` y/o ejecuta el selector real de LandingFactory:
-     `node <LandingFactory>/scripts/resolve-model-fallback.mjs --agent <especialista> [--error-type <tipo>] [--exclude <modelos-fallidos>] --log-file docs/design/model-fallback-log.md`
+3. **Resiliencia y Orquestación Automática del Fallback (6 pasos)**:
+   - Protocolo determinista ante cualquier fallo de `opencode_2`:
+     1. Detectar el fallo (`transient`, `rate_limit`, `unavailable`, `capability`, `auth`).
+     2. Ejecutar `node <LandingFactory>/scripts/resolve-model-fallback.mjs --agent <especialista> --error-type <tipo> --exclude <modelos-fallidos> --log-file docs/design/model-fallback-log.md`.
+     3. Leer `selectedModel` y `action` de la salida JSON.
+     4. Volver a delegar `delegate_task` en `opencode_2` usando `selectedModel` (si `action` es `USE_FALLBACK` o `RETRY_PRIMARY`).
+     5. Confirmar que el subagente respondió correctamente.
+     6. Registrar el resultado final en `docs/design/model-fallback-log.md`.
    - Perfiles de capacidad:
      - **Perfil A (Visual / Multimodal)**: `visual-analyst`, `ui-ux-designer`, `asset-researcher`, `visual-qa`. Si la tarea requiere analizar imágenes/capturas, el sustituto **debe** admitir visión; nunca sustituyas por un modelo solo-texto.
      - **Perfil B (Planificación)**: `implementation-planner`.
@@ -86,7 +91,14 @@ Después de implementar:
    verificando `1440×900`, `768×1024` y `390×844`.
 3. Revisa errores de consola, errores de red (`status >= 400`), desbordamiento horizontal e interacciones afectadas.
 4. Lanza `@visual-qa` si el cambio tiene impacto visual significativo, y `@code-reviewer` si tiene impacto técnico, funcional o estructural (aplicando el sistema de fallback si hace falta).
-5. Si se detectan problemas, corrígelos y vuelve a verificar (máximo 3 rondas visuales por defecto). Nunca declares exitosa una prueba no ejecutada.
+5. **Cierre obligatorio del ciclo de auditoría tras correcciones**:
+   - **Hallazgo crítico/técnico** → repetir `@code-reviewer` después de corregir.
+   - **Hallazgo visual** → repetir `@visual-qa` y re-capturar Playwright después de corregir (máximo 3 rondas visuales).
+   - **Cambio estructural (Nivel 3)** → repetir ambos (`@visual-qa` y `@code-reviewer`).
+   - **Cambio trivial (Nivel 1)** → verificar únicamente las pruebas afectadas.
+6. **LandingFactory Quality Gate**:
+   Ejecuta `node <LandingFactory>/scripts/quality-gate.mjs` (indicando `--build`, `--a11y`, `--code-review` y `--compare-report` si aplica).
+   Distingue explícitamente entre `blockers`, `warnings` y `notApplicable`. **Nunca declares `PASS` o `READY` si un chequeo aplicable no se ejecutó o está en `BLOCKED`.**
 
 ## FASE 6 — ENTREGA
 

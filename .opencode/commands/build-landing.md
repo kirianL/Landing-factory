@@ -69,15 +69,16 @@ Capturando mínimo:
 Registra errores de consola y overflow horizontal.
 
 ## FASE 6 — COMPARACIÓN Y CORRECCIÓN VISUAL
-Si existe herramienta de comparación, ejecuta `compare-screenshots.mjs` para generar diffs/métricas.
+Si existe herramienta de comparación, ejecuta `compare-screenshots.mjs --zones 3 --target-similarity 85 --out docs/design/compare-report.json` para medir similitud visual por sección y viewport.
 Lanza `@visual-qa` (cadena multimodal con fallback) con las capturas originales (`references/`) y las reales (`docs/design/captures/`).
 Guarda el informe en `docs/design/visual-qa.md`.
 Gemini Hydrogen corrige por prioridad: geometría → tamaños/posiciones → tipografía → imágenes/recortes → colores → espaciados → detalles.
-Realiza al menos 2 pasadas si hay diferencias materiales (máximo 3 iteraciones por defecto salvo que el usuario pida más).
+Realiza al menos 2 pasadas si hay diferencias materiales (máximo 3 iteraciones por defecto salvo que el usuario pida más) y repite `@visual-qa` tras corregir hallazgos visuales.
 
-## FASE 7 — AUDITORÍA TÉCNICA
-Lanza `@code-reviewer` (`opencode/deepseek-v4.1-flash-free`) en modo solo lectura sobre los archivos implementados y el log de consola.
-Gemini Hydrogen corrige los hallazgos críticos/altos.
+## FASE 7 — AUDITORÍA TÉCNICA Y QUALITY GATE
+Lanza `@code-reviewer` (`opencode/deepseek-v4.1-flash-free` con protocolo de fallback de 6 pasos) en modo solo lectura sobre los archivos implementados y el log de consola.
+Si `@code-reviewer` reporta hallazgos críticos/altos, Gemini Hydrogen los corrige y **repite `@code-reviewer`** para cerrar el ciclo.
+Antes de entregar, ejecuta `node <LandingFactory>/scripts/quality-gate.mjs --build <pass|fail|na> --a11y <pass|fail|na> --code-review <pass|fail|na> --compare-report docs/design/compare-report.json`. Nunca declares `READY` si el Quality Gate devuelve `BLOCKED` o si faltan pruebas por ejecutar.
 
 ## FASE 8 — ENTREGA
 Presenta al usuario:

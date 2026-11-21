@@ -8,6 +8,7 @@
     "new-landing": "node scripts/new-landing.mjs",
     "capture": "node scripts/capture-landing.mjs",
     "compare": "node scripts/compare-screenshots.mjs",
+    "quality-gate": "node scripts/quality-gate.mjs",
     "resolve-model": "node scripts/resolve-model-fallback.mjs",
     "setup-global": "powershell -ExecutionPolicy Bypass -File scripts/setup-global.ps1"
   },

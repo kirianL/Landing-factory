@@ -137,6 +137,7 @@ const VALID_ERROR_TYPES = new Set([
   'capability',
   'permission_denied',
   'auth',
+  'unknown',
 ]);
 
 function parseArgs(argv) {
@@ -148,6 +149,8 @@ function parseArgs(argv) {
     failedProvider: null,
     usedProviders: [],
     errorType: 'none',
+    errorMessage: null,
+    classifyOnly: false,
     attempt: 1,
     offline: false,
     simulateCatalog: null,
@@ -172,6 +175,8 @@ function parseArgs(argv) {
     else if (arg === '--used-providers') {
       opts.usedProviders = (argv[++i] || '').split(',').map((s) => s.trim()).filter(Boolean);
     } else if (arg === '--error-type') opts.errorType = argv[++i] || 'none';
+    else if (arg === '--error-message') opts.errorMessage = argv[++i] || '';
+    else if (arg === '--classify-error') opts.classifyOnly = true;
     else if (arg === '--attempt') opts.attempt = Number(argv[++i] || '1');
     else if (arg === '--offline') opts.offline = true;
     else if (arg === '--simulate-catalog') opts.simulateCatalog = path.resolve(argv[++i]);
@@ -204,7 +209,9 @@ Opciones:
   --failed-model <id>          Modelo concreto que falló (si difiere del principal).
   --failed-provider <prov>     Proveedor que falló (prioriza independencia de proveedor).
   --used-providers <p1,p2>     Proveedores ya asignados en paralelo (mejora diversidad).
-  --error-type <tipo>          none | transient | rate_limit | quota_exhausted | unavailable | capability | permission_denied | auth
+  --error-type <tipo>          none | transient | rate_limit | quota_exhausted | unavailable | capability | permission_denied | auth | unknown
+  --error-message <texto>      Mensaje de error crudo para clasificación automática opcional (si --error-type es none/unknown).
+  --classify-error             Clasifica --error-message y devuelve JSON sin seleccionar modelo.
   --attempt <n>                Número de intento actual sobre el modelo principal (default: 1)
   --free-policy <politica>     strict (default, solo verified_free) | allow-included (permite Antigravity incluido) | any
   --registry <ruta>            Registro local JSON (default: scripts/model-registry.json)
@@ -363,6 +370,12 @@ function mergeCandidateMetadata(id, { orMeta, registryModel, t3Caps, isLiveInOpe
   let delegatable = registryModel?.delegatable ?? true;
   const constraints = [...(registryModel?.knownConstraints || [])];
 
+  // OpenCode/OpenRouter routes always require presence in `opencode models`, even when t3Caps is provided.
+  if ((provider === 'openrouter' || provider === 'opencode') && isLiveInOpenCode === false) {
+    delegatable = false;
+    constraints.push('No presente en `opencode models`');
+  }
+
   if (t3Caps) {
     const pInfo = t3Caps.providers.get(providerInstanceId);
     if (!pInfo) {
@@ -379,9 +392,6 @@ function mergeCandidateMetadata(id, { orMeta, registryModel, t3Caps, isLiveInOpe
         constraints.push(`Modelo ${bareId} no encontrado en antigravity`);
       }
     }
-  } else if ((provider === 'openrouter' || provider === 'opencode') && isLiveInOpenCode === false) {
-    delegatable = false;
-    constraints.push('No presente en `opencode models`');
   }
 
   // Never assume free by name alone when price is unknown
@@ -472,25 +482,165 @@ async function buildCatalog(opts, registry, t3Caps) {
   return catalog;
 }
 
+function cleanupAbandonedTempFiles(dir, baseName, maxAgeMs = 60_000) {
+  try {
+    const prefix = `.tmp-${baseName}-`;
+    const now = Date.now();
+    for (const entry of fs.readdirSync(dir)) {
+      if (!entry.startsWith(prefix) || !entry.endsWith('.json')) continue;
+      const fullPath = path.join(dir, entry);
+      try {
+        const stat = fs.statSync(fullPath);
+        if (now - stat.mtimeMs > maxAgeMs) {
+          fs.unlinkSync(fullPath);
+        }
+      } catch {
+        // Ignore concurrent removal
+      }
+    }
+  } catch {
+    // Ignore directory read errors
+  }
+}
+
+function sleepSync(ms) {
+  const end = Date.now() + ms;
+  while (Date.now() < end) {
+    // Short busy-wait for cross-process lock/rename backoff without native deps
+  }
+}
+
+function acquireLock(lockPath, timeoutMs = 2000, staleMs = 10_000) {
+  const deadline = Date.now() + timeoutMs;
+  while (Date.now() < deadline) {
+    try {
+      const fd = fs.openSync(lockPath, 'wx');
+      fs.writeSync(fd, `${process.pid}:${Date.now()}`);
+      fs.closeSync(fd);
+      return true;
+    } catch (err) {
+      if (err?.code === 'EEXIST') {
+        try {
+          const stat = fs.statSync(lockPath);
+          if (Date.now() - stat.mtimeMs > staleMs) {
+            fs.unlinkSync(lockPath);
+            continue;
+          }
+        } catch {
+          // Lock disappeared; retry immediately
+          continue;
+        }
+        sleepSync(15);
+        continue;
+      }
+      return false;
+    }
+  }
+  return false;
+}
+
+function releaseLock(lockPath) {
+  try {
+    fs.unlinkSync(lockPath);
+  } catch {
+    // Already released
+  }
+}
+
+function mergeHealthStates(baseState, incomingState) {
+  const merged = {
+    models: { ...(baseState?.models || {}) },
+    providers: { ...(baseState?.providers || {}) },
+  };
+  for (const [id, entry] of Object.entries(incomingState?.models || {})) {
+    const prev = merged.models[id];
+    if (!prev || (entry.lastFailedAt || '') >= (prev.lastFailedAt || '')) {
+      merged.models[id] = {
+        ...entry,
+        failures: Math.max(Number(entry.failures || 0), Number(prev?.failures || 0)),
+      };
+    }
+  }
+  for (const [prov, entry] of Object.entries(incomingState?.providers || {})) {
+    const prev = merged.providers[prov];
+    if (!prev || (entry.lastFailedAt || '') >= (prev.lastFailedAt || '')) {
+      merged.providers[prov] = {
+        ...entry,
+        failures: Math.max(Number(entry.failures || 0), Number(prev?.failures || 0)),
+      };
+    }
+  }
+  return merged;
+}
+
 function loadState(stateFile) {
   if (!stateFile || !fs.existsSync(stateFile)) {
     return { models: {}, providers: {} };
   }
+  cleanupAbandonedTempFiles(path.dirname(stateFile), path.basename(stateFile));
   try {
     const parsed = JSON.parse(fs.readFileSync(stateFile, 'utf8'));
+    if (!parsed || typeof parsed !== 'object') {
+      return { models: {}, providers: {} };
+    }
     return {
-      models: parsed.models || {},
-      providers: parsed.providers || {},
+      models: parsed.models && typeof parsed.models === 'object' ? parsed.models : {},
+      providers: parsed.providers && typeof parsed.providers === 'object' ? parsed.providers : {},
     };
   } catch {
     return { models: {}, providers: {} };
   }
 }
 
-function saveState(stateFile, state) {
+function saveState(stateFile, state, { mergeLatest = true } = {}) {
   if (!stateFile) return;
-  fs.mkdirSync(path.dirname(stateFile), { recursive: true });
-  fs.writeFileSync(stateFile, JSON.stringify(state, null, 2), 'utf8');
+  const dir = path.dirname(stateFile);
+  const base = path.basename(stateFile);
+  fs.mkdirSync(dir, { recursive: true });
+  cleanupAbandonedTempFiles(dir, base);
+
+  const lockPath = `${stateFile}.lock`;
+  const locked = acquireLock(lockPath);
+  const tmpPath = path.join(
+    dir,
+    `.tmp-${base}-${process.pid}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}.json`
+  );
+
+  try {
+    const finalState = mergeLatest ? mergeHealthStates(loadState(stateFile), state) : state;
+    const serialized = JSON.stringify(finalState, null, 2);
+    // Validate JSON round-trip before replacing previous state
+    JSON.parse(serialized);
+    fs.writeFileSync(tmpPath, serialized, 'utf8');
+
+    // Atomic replace with short Windows EBUSY/EPERM retry
+    let replaced = false;
+    for (let attempt = 0; attempt < 5; attempt++) {
+      try {
+        fs.renameSync(tmpPath, stateFile);
+        replaced = true;
+        break;
+      } catch (err) {
+        if ((err?.code === 'EPERM' || err?.code === 'EBUSY') && attempt < 4) {
+          sleepSync(20);
+          continue;
+        }
+        throw err;
+      }
+    }
+    if (!replaced) {
+      throw new Error(`No se pudo reemplazar ${stateFile}`);
+    }
+  } finally {
+    if (fs.existsSync(tmpPath)) {
+      try {
+        fs.unlinkSync(tmpPath);
+      } catch {
+        // Ignore cleanup failure
+      }
+    }
+    if (locked) releaseLock(lockPath);
+  }
 }
 
 function recordFailureInState(state, modelId, provider, errorType, nowMs) {
@@ -564,24 +714,99 @@ function scoreCandidate(meta, { profile, failedProvider, usedProviders, state, n
     score -= 60;
   }
 
-  // 6. Recent failure penalty
+  // 6. Active cooldown / recent failure penalty (expired cooldowns recover normal priority)
   const modelHealth = state.models[meta.id];
-  if (modelHealth?.failures) {
+  const modelCooldownActive =
+    typeof modelHealth?.cooldownUntil === 'number' &&
+    Number.isFinite(modelHealth.cooldownUntil) &&
+    modelHealth.cooldownUntil > nowMs;
+  if (modelCooldownActive && modelHealth?.failures) {
     score -= modelHealth.failures * 35;
   }
   const provHealth = state.providers[meta.provider];
-  if (provHealth?.cooldownUntil && provHealth.cooldownUntil > nowMs) {
+  if (
+    typeof provHealth?.cooldownUntil === 'number' &&
+    Number.isFinite(provHealth.cooldownUntil) &&
+    provHealth.cooldownUntil > nowMs
+  ) {
     score -= 140;
   }
 
   return score;
 }
 
+function classifyErrorMessage(message, explicitErrorType = 'none') {
+  if (explicitErrorType && explicitErrorType !== 'none' && explicitErrorType !== 'unknown') {
+    return { errorType: explicitErrorType, source: 'explicit', confidence: 'high' };
+  }
+  if (!message || typeof message !== 'string') {
+    return { errorType: 'unknown', source: 'empty', confidence: 'low' };
+  }
+  const lower = message.toLowerCase();
+
+  // 1. Auth errors (highest priority, never retry silently)
+  if (
+    /\b401\b/.test(lower) ||
+    /unauthorized(?! to delegate)|invalid api key|authentication failed|invalid credentials|api key (is )?(missing|required|invalid)|not authenticated|login required/.test(lower)
+  ) {
+    return { errorType: 'auth', source: 'inferred', confidence: 'high' };
+  }
+
+  // 2. Permission / delegation errors
+  if (
+    /\b403\b/.test(lower) ||
+    /permission denied|forbidden|not allowed|canrunchildtask|provider instance is disabled|unauthorized to delegate|access denied/.test(lower)
+  ) {
+    return { errorType: 'permission_denied', source: 'inferred', confidence: 'high' };
+  }
+
+  // 3. Quota exhausted (must be checked before generic rate_limit so daily/credit limits aren't misclassified)
+  if (
+    /free usage limit reached|free-models-per-day|insufficient credits|quota exceeded|quota exhausted|credit balance|add \d+ credits|billing|monthly limit|daily limit|usage limit reached/.test(lower)
+  ) {
+    return { errorType: 'quota_exhausted', source: 'inferred', confidence: 'high' };
+  }
+
+  // 4. Rate limit (explicit RPM/TPM/429/rate-limit signals; never match generic word "limit" alone)
+  if (
+    /\b429\b/.test(lower) ||
+    /rate[ _-]?limit|too many requests|requests per (minute|second)|tokens per minute|\brpm\b|\btpm\b|throttl/.test(lower)
+  ) {
+    return { errorType: 'rate_limit', source: 'inferred', confidence: 'high' };
+  }
+
+  // 5. Capability mismatch
+  if (
+    /does not support image|vision (is )?not supported|multimodal (is )?not supported|context length exceeded|maximum context length|unsupported modality|tool use (is )?not supported/.test(lower)
+  ) {
+    return { errorType: 'capability', source: 'inferred', confidence: 'high' };
+  }
+
+  // 6. Model / service unavailable
+  if (
+    /\b503\b/.test(lower) ||
+    /model not found|model unavailable|no such model|service unavailable|provider offline|deprecated|model does not exist/.test(lower)
+  ) {
+    return { errorType: 'unavailable', source: 'inferred', confidence: 'high' };
+  }
+
+  // 7. Transient network / gateway errors
+  if (
+    /\b(502|504)\b/.test(lower) ||
+    /timeout|timed out|econnreset|econnrefused|etimedout|socket hang up|bad gateway|gateway timeout|temporary|network error|fetch failed/.test(lower)
+  ) {
+    return { errorType: 'transient', source: 'inferred', confidence: 'medium' };
+  }
+
+  return { errorType: 'unknown', source: 'inferred', confidence: 'low' };
+}
+
 function sanitizeText(text) {
   if (!text) return '';
   return String(text)
     .replace(/sk-[a-zA-Z0-9_-]{10,}/g, '[REDACTED_KEY]')
-    .replace(/Bearer\s+[a-zA-Z0-9._-]+/gi, 'Bearer [REDACTED]');
+    .replace(/Bearer\s+[a-zA-Z0-9._-]+/gi, 'Bearer [REDACTED]')
+    .replace(/(api[_-]?key|token|secret|password)\s*[:=]\s*['"]?[^\s'",;]+['"]?/gi, '$1=[REDACTED]');
 }
 
 function appendLog(logPath, entry) {
@@ -625,6 +850,18 @@ async function main() {
   if (!VALID_ERROR_TYPES.has(opts.errorType)) {
     console.error(`Error: --error-type inválido "${opts.errorType}". Válidos: ${[...VALID_ERROR_TYPES].join(', ')}`);
     process.exit(1);
+  }
+
+  if (opts.errorMessage !== null && (opts.errorType === 'none' || opts.errorType === 'unknown')) {
+    const classified = classifyErrorMessage(opts.errorMessage, opts.errorType);
+    opts.errorType = classified.errorType;
+    if (opts.classifyOnly) {
+      console.log(JSON.stringify(classified, null, 2));
+      return;
+    }
+  } else if (opts.classifyOnly) {
+    console.log(JSON.stringify(classifyErrorMessage(opts.errorMessage || '', opts.errorType), null, 2));
+    return;
   }
 
   const registry = loadRegistry(opts.registryPath);
@@ -846,7 +1083,23 @@ async function main() {
   console.log(JSON.stringify(result, null, 2));
 }
 
-main().catch((err) => {
-  console.error(err);
-  process.exit(1);
-});
+export {
+  AGENT_PROFILES,
+  COOLDOWN_MS,
+  classifyErrorMessage,
+  loadState,
+  saveState,
+  mergeCandidateMetadata,
+  scoreCandidate,
+  sanitizeText,
+};
+
+const isCliEntry =
+  process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url);
+
+if (isCliEntry) {
+  main().catch((err) => {
+    console.error(err);
+    process.exit(1);
+  });
+}

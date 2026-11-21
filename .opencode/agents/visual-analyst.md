@@ -1,7 +1,7 @@
 ---
 description: "Ingeniería inversa visual de screenshots de referencia. Analiza dimensiones, secciones, proporciones, tipografías, colores, grids, jerarquías y elementos repetidos en modo solo lectura."
 mode: subagent
-model: opencode/nemotron-3.5-super-vl-free
+model: openrouter/google/gemma-4-31b-it:free
 temperature: 0.1
 permission:
   edit: deny

@@ -1,7 +1,7 @@
 ---
 description: "Control de calidad visual multimodal. Compara screenshots originales contra capturas reales de Playwright y reporta discrepancias priorizadas sin editar código."
 mode: subagent
-model: opencode/nemotron-3.5-super-vl-free
+model: openrouter/google/gemma-4-31b-it:free
 temperature: 0.1
 permission:
   edit: deny

@@ -1,7 +1,7 @@
 ---
 description: "Diseñador UI/UX y sistemas visuales. Define jerarquías, escala tipográfica, tokens, espaciados, responsive, interacciones y arquitectura de componentes sin alterar la identidad original."
 mode: subagent
-model: opencode/nemotron-3.5-super-vl-free
+model: openrouter/google/gemma-4-31b-it:free
 temperature: 0.2
 permission:
   edit: deny

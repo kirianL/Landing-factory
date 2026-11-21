@@ -1,7 +1,7 @@
 ---
 description: "Especialista en inventario, recuperación y especificación de recursos gráficos (fotos, ilustraciones, iconos, logotipos) manteniendo proporciones, encuadre e iluminación."
 mode: subagent
-model: opencode/nemotron-3.5-super-vl-free
+model: openrouter/google/gemma-4-31b-it:free
 temperature: 0.1
 permission:
   edit: deny

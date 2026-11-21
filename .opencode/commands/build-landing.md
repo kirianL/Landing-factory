@@ -16,8 +16,27 @@ Ejecuta estrictamente el pipeline obligatorio de **LandingFactory** siguiendo es
 3. Identifica assets existentes en `assets/` o `public/`, framework existente (`package.json`, `src/`, `index.html`, etc.), package manager, scripts y estado de Git.
 4. No elimines ni sobrescribas archivos del usuario sin respaldo.
 
+## REGLA DE RESILIENCIA DE SUBAGENTES (FALLBACK OBLIGATORIO)
+**Jamás te quedes sin subagentes.** Antes de delegar a `opencode_2`, consulta `orchestrator_capabilities`. Si el modelo principal no existe, falla o alcanza límite de cuota, pasa automáticamente al siguiente modelo disponible en la cadena:
+- **Especialistas multimodales** (`visual-analyst`, `ui-ux-designer`, `asset-researcher`, `visual-qa`):
+  1. `openrouter/google/gemma-4-31b-it:free`
+  2. `openrouter/google/gemma-4-26b-a4b-it:free`
+  3. `openrouter/nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free`
+  4. `openrouter/openrouter/free`
+  5. Fallback final garantizado: `antigravity/gemini-3.8-flash` (o `invoke_subagent` solo lectura)
+- **Planificación** (`implementation-planner`):
+  1. `opencode/beam-free`
+  2. `openrouter/nvidia/nemotron-3-ultra-550b-a55b:free`
+  3. `openrouter/openrouter/free`
+  4. Fallback final garantizado: `antigravity/gemini-3.8-flash`
+- **Auditoría de código** (`code-reviewer`):
+  1. `opencode/deepseek-v4.1-flash-free`
+  2. `opencode/flint-40b-free`
+  3. `openrouter/openrouter/free`
+  4. Fallback final garantizado: `antigravity/gemini-3.8-flash`
+
 ## FASE 1 — ANÁLISIS PARALELO (Solo lectura)
-Lanza en paralelo a los tres especialistas multimodales (usando `opencode/nemotron-3.5-super-vl-free` en `opencode_2` o subagentes OpenCode):
+Lanza en paralelo a los tres especialistas multimodales (usando la cadena multimodal en `opencode_2` o fallback):
 - `@visual-analyst`: analiza todos los screenshots en `references/` y devuelve el informe para `docs/design/visual-analysis.md`.
 - `@ui-ux-designer`: define sistema visual, tokens, tipografía, responsive y componentes para `docs/design/design-system.md`.
 - `@asset-researcher`: cataloga cada imagen, fotografía, ilustración, icono y logotipo para `docs/design/asset-inventory.md`.
@@ -51,7 +70,7 @@ Registra errores de consola y overflow horizontal.
 
 ## FASE 6 — COMPARACIÓN Y CORRECCIÓN VISUAL
 Si existe herramienta de comparación, ejecuta `compare-screenshots.mjs` para generar diffs/métricas.
-Lanza `@visual-qa` (`opencode/nemotron-3.5-super-vl-free`) con las capturas originales (`references/`) y las reales (`docs/design/captures/`).
+Lanza `@visual-qa` (cadena multimodal con fallback) con las capturas originales (`references/`) y las reales (`docs/design/captures/`).
 Guarda el informe en `docs/design/visual-qa.md`.
 Gemini Hydrogen corrige por prioridad: geometría → tamaños/posiciones → tipografía → imágenes/recortes → colores → espaciados → detalles.
 Realiza al menos 2 pasadas si hay diferencias materiales (máximo 3 iteraciones por defecto salvo que el usuario pida más).

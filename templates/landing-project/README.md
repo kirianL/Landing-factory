@@ -10,4 +10,7 @@ Este proyecto fue inicializado con la plantilla **LandingFactory**.
 4. Ejecuta `/build-landing` (puedes añadir instrucciones extra tras el comando).
 5. Revisa los entregables generados en `docs/design/` y las capturas reales en `docs/design/captures/`.
 
-Para auditar un proyecto ya implementado sin reconstruir desde cero, usa `/review-landing`.
+Comandos disponibles sobre este proyecto:
+- `/build-landing`: construir o reconstruir desde `references/`.
+- `/modify-landing`: aplicar cambios incrementales o estructurales con verificación Playwright.
+- `/review-landing`: auditar un proyecto ya implementado sin reconstruirlo.

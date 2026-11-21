@@ -1,0 +1,9 @@
+node_modules/
+.DS_Store
+Thumbs.db
+*.log
+*.bak
+docs/design/captures/
+projects/*/node_modules/
+projects/*/dist/
+projects/*/.next/

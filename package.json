@@ -1,0 +1,16 @@
+{
+  "name": "landing-factory",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Infraestructura reutilizable para reconstruir landing pages desde screenshots con OpenCode + Gemini Hydrogen + Playwright.",
+  "type": "module",
+  "scripts": {
+    "new-landing": "node scripts/new-landing.mjs",
+    "capture": "node scripts/capture-landing.mjs",
+    "compare": "node scripts/compare-screenshots.mjs",
+    "setup-global": "powershell -ExecutionPolicy Bypass -File scripts/setup-global.ps1"
+  },
+  "devDependencies": {
+    "playwright": "^1.65.1"
+  }
+}

@@ -10,6 +10,8 @@
     "compare": "node scripts/compare-screenshots.mjs",
     "quality-gate": "node scripts/quality-gate.mjs",
     "resolve-model": "node scripts/resolve-model-fallback.mjs",
+    "checkpoint": "node scripts/session-checkpoint.mjs",
+    "publish-landing": "node scripts/publish-landing.mjs",
     "setup-global": "powershell -ExecutionPolicy Bypass -File scripts/setup-global.ps1"
   },
   "devDependencies": {

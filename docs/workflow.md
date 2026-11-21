@@ -5,6 +5,8 @@
 | `/build-landing` | Crear o reconstruir una landing page desde cero a partir de `references/`. |
 | `/modify-landing` | Modificar una landing page existente de forma controlada y verificada. |
 | `/review-landing` | Auditar visual y técnicamente una landing sin modificarla. |
+| `/resume-landing` | Reanudar una sesión interrumpida leyendo `docs/design/session-checkpoint.json`. |
+| `/publish-landing` | Preparar y publicar un proyecto de `projects/` en GitHub de forma independiente. |
 
 ## Fases de `/build-landing`
 
@@ -40,6 +42,11 @@ Ejecuta directamente las Fases 5, 6 y 7 sobre un proyecto ya implementado para a
 4. Volver a delegar `delegate_task` en `opencode_2` con el modelo alternativo (o detener si no hay alternativa gratuita compatible).
 5. Confirmar que el subagente respondió correctamente.
 6. Registrar el resultado en `docs/design/model-fallback-log.md` sin exponer claves ni tokens.
+
+## Recuperación de Sesión (`/resume-landing`) y Publicación (`/publish-landing`)
+
+- **Checkpoints (`scripts/session-checkpoint.mjs`)**: guarda el progreso de fase en `docs/design/session-checkpoint.json` para que `/resume-landing` retome sin repetir trabajo completado.
+- **Publicación independiente (`scripts/publish-landing.mjs`)**: valida que el proyecto viva en `projects/<nombre>`, excluye infraestructura interna de LandingFactory vía `.gitignore` y staging selectivo, audita secretos, exige `quality-gate` aprobado y nunca ejecuta `git push` sin autorización explícita (`--confirm-push`).
 
 ## LandingFactory Quality Gate y Cierre de Auditoría
 

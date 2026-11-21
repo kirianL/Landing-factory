@@ -28,3 +28,5 @@ npm run new-landing -- nombre-proyecto --dir C:\ruta\externa\nombre-proyecto
 3. Abre `projects/mi-landing` en **T3 Code**.
 4. Selecciona **Gemini 4 Hydrogen**.
 5. Escribe `/build-landing` (más cualquier instrucción específica).
+6. Si una sesión se interrumpe, reanuda con `/resume-landing`.
+7. Para publicar el proyecto como repositorio independiente en GitHub (tras superar Quality Gate y con autorización explícita), ejecuta `/publish-landing`.

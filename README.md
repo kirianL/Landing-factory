@@ -23,6 +23,8 @@ CREAR CARPETA → AÑADIR SCREENSHOTS → ABRIR EN T3 CODE → EJECUTAR /build-l
 | `/build-landing` | Crear o reconstruir una landing page desde screenshots en `references/`. |
 | `/modify-landing` | Modificar una landing page existente con selección condicional de especialistas y verificación Playwright. |
 | `/review-landing` | Auditar visual y técnicamente una landing existente sin reconstruirla. |
+| `/resume-landing` | Recuperar una ejecución interrumpida desde `docs/design/session-checkpoint.json`. |
+| `/publish-landing` | Preparar y publicar una landing de `projects/<nombre>` como repositorio GitHub independiente. |
 
 ## Documentación
 

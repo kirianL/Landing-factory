@@ -68,14 +68,52 @@ function resolveVisualQaStatus(opts) {
   return { status: 'not_run', evidence: 'Veredicto no concluyente en visual-qa.md' };
 }
 
-function evaluatePlaywright(reportPath) {
+function getLatestSourceMtime(projectDir) {
+  if (!projectDir || !fs.existsSync(projectDir)) return 0;
+  let latest = 0;
+  const targets = ['index.html', 'styles.css', 'src'];
+  for (const t of targets) {
+    const full = path.join(projectDir, t);
+    if (!fs.existsSync(full)) continue;
+    const st = fs.statSync(full);
+    if (st.isFile()) {
+      latest = Math.max(latest, st.mtimeMs);
+    } else if (st.isDirectory()) {
+      for (const entry of fs.readdirSync(full, { withFileTypes: true })) {
+        if (entry.isFile()) {
+          latest = Math.max(latest, fs.statSync(path.join(full, entry.name)).mtimeMs);
+        }
+      }
+    }
+  }
+  return latest;
+}
+
+function evaluatePlaywright(reportPath, sourceDir) {
   if (!fs.existsSync(reportPath)) {
     return {
       responsive: { status: 'not_run', detail: 'report.json no encontrado' },
       consoleNetwork: { status: 'not_run', detail: 'report.json no encontrado' },
     };
   }
-  const data = JSON.parse(fs.readFileSync(reportPath, 'utf8'));
+  let data;
+  try {
+    data = JSON.parse(fs.readFileSync(reportPath, 'utf8'));
+  } catch (err) {
+    return {
+      responsive: { status: 'fail', detail: `report.json corrupto: ${err.message}` },
+      consoleNetwork: { status: 'fail', detail: `report.json corrupto: ${err.message}` },
+    };
+  }
+
+  const capturedAtMs = data?.capturedAt ? Date.parse(data.capturedAt) : fs.statSync(reportPath).mtimeMs;
+  const latestSrcMs = getLatestSourceMtime(sourceDir);
+  if (latestSrcMs > capturedAtMs + 1000) {
+    return {
+      responsive: { status: 'fail', detail: 'report.json desactualizado respecto a archivos fuente modificados después de la captura' },
+      consoleNetwork: { status: 'fail', detail: 'report.json desactualizado respecto a archivos fuente modificados' },
+    };
+  }
   const results = Array.isArray(data?.results) ? data.results : [];
   const requiredSizes = ['1440x900', '768x1024', '390x844'];
   const capturedSizes = results.map((r) => `${r.viewport?.width}x${r.viewport?.height}`);
@@ -108,7 +146,8 @@ function evaluatePlaywright(reportPath) {
 
 function main() {
   const opts = parseArgs(process.argv.slice(2));
-  const pw = evaluatePlaywright(opts.capturesReport);
+  const inferredProjectDir = path.resolve(path.dirname(opts.capturesReport), '..', '..', '..');
+  const pw = evaluatePlaywright(opts.capturesReport, inferredProjectDir);
   const vqa = resolveVisualQaStatus(opts);
 
   const checks = [

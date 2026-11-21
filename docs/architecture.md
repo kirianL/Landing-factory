@@ -11,7 +11,7 @@
    - Gemini 4 Hydrogen es el único agente con permisos de escritura, comandos, servidores, Playwright y generación de assets.
 2. **OpenCode v2.3.2 (Orquestación de Subagentes y Comandos)**:
    - Agentes globales en `C:\Users\Kirian\.config\opencode\agents\` (enlazados mediante junction a `LandingFactory/.opencode/agents/`).
-   - Comandos globales `/build-landing`, `/modify-landing` y `/review-landing` en `C:\Users\Kirian\.config\opencode\commands\` (enlazados a `LandingFactory/.opencode/commands/`).
+   - Comandos globales `/build-landing`, `/modify-landing`, `/review-landing`, `/resume-landing` y `/publish-landing` en `C:\Users\Kirian\.config\opencode\commands\` (enlazados a `LandingFactory/.opencode/commands/`).
    - En T3 Code, el proveedor `opencode_2` permite delegar directamente a modelos gratuitos de OpenCode mediante `delegate_task`.
 3. **Skills Compartidas**:
    - `design-to-code` (`Atharvsinh-codez/skills`) instalada globalmente en `~\.agents\skills\design-to-code` (OpenCode) y `~\.gemini\config\skills\design-to-code` (Antigravity).

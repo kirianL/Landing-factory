@@ -16,24 +16,28 @@ Ejecuta estrictamente el pipeline obligatorio de **LandingFactory** siguiendo es
 3. Identifica assets existentes en `assets/` o `public/`, framework existente (`package.json`, `src/`, `index.html`, etc.), package manager, scripts y estado de Git.
 4. No elimines ni sobrescribas archivos del usuario sin respaldo.
 
-## REGLA DE RESILIENCIA DE SUBAGENTES (FALLBACK OBLIGATORIO)
-**Jamás te quedes sin subagentes.** Antes de delegar a `opencode_2`, consulta `orchestrator_capabilities`. Si el modelo principal no existe, falla o alcanza límite de cuota, pasa automáticamente al siguiente modelo disponible en la cadena:
+## REGLA DE RESILIENCIA DE SUBAGENTES (FALLBACK MULTIPROVEEDOR OBLIGATORIO)
+**Jamás te quedes sin subagentes.** Antes de delegar, consulta `orchestrator_capabilities` para confirmar qué `providerInstanceId` tiene `canRunChildTask: true` (`opencode_2` y `antigravity`). Si el modelo principal falla, alcanza cuota o carece de permisos, ejecuta el selector inteligente (`scripts/resolve-model-fallback.mjs`) con `--error-type <transient|rate_limit|quota_exhausted|unavailable|capability|permission_denied|auth>` y `--state-file docs/design/model-health-state.json`, priorizando proveedores independientes y gratuitos verificados (`--free-policy strict`, o `allow-included` solo como último recurso en `antigravity/gemini-3.8-flash` solo lectura):
 - **Especialistas multimodales** (`visual-analyst`, `ui-ux-designer`, `asset-researcher`, `visual-qa`):
-  1. `openrouter/google/gemma-4-31b-it:free`
-  2. `openrouter/google/gemma-4-26b-a4b-it:free`
-  3. `openrouter/nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free`
-  4. `openrouter/openrouter/free`
-  5. Fallback final garantizado: `antigravity/gemini-3.8-flash` (o `invoke_subagent` solo lectura)
+  1. `openrouter/google/gemma-4-31b-it:free` (`opencode_2`)
+  2. `opencode/nemotron-3.5-super-vl-free` (`opencode_2`, proveedor independiente)
+  3. `openrouter/google/gemma-4-26b-a4b-it:free` (`opencode_2`)
+  4. `openrouter/nvidia/nemotron-3.5-super-vl:free` (`opencode_2`)
+  5. `openrouter/nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free` (`opencode_2`)
+  6. `openrouter/openrouter/free` (`opencode_2`)
+  7. Último recurso incluido de sesión (`--free-policy allow-included`): `antigravity/gemini-3.8-flash` (`antigravity`, solo lectura)
 - **Planificación** (`implementation-planner`):
-  1. `opencode/beam-free`
-  2. `openrouter/nvidia/nemotron-3-ultra-550b-a55b:free`
-  3. `openrouter/openrouter/free`
-  4. Fallback final garantizado: `antigravity/gemini-3.8-flash`
+  1. `opencode/beam-free` (`opencode_2`)
+  2. `openrouter/nvidia/nemotron-3-ultra-550b-a55b:free` (`opencode_2`, proveedor independiente)
+  3. `opencode/deepseek-v4.1-flash-free` (`opencode_2`)
+  4. `openrouter/openrouter/free` (`opencode_2`)
+  5. Último recurso incluido de sesión (`--free-policy allow-included`): `antigravity/gemini-3.8-flash` (`antigravity`, solo lectura)
 - **Auditoría de código** (`code-reviewer`):
-  1. `opencode/deepseek-v4.1-flash-free`
-  2. `opencode/flint-40b-free`
-  3. `openrouter/openrouter/free`
-  4. Fallback final garantizado: `antigravity/gemini-3.8-flash`
+  1. `opencode/deepseek-v4.1-flash-free` (`opencode_2`)
+  2. `opencode/flint-40b-free` (`opencode_2`)
+  3. `openrouter/nvidia/nemotron-3-ultra-550b-a55b:free` (`opencode_2`, proveedor independiente)
+  4. `openrouter/openrouter/free` (`opencode_2`)
+  5. Último recurso incluido de sesión (`--free-policy allow-included`): `antigravity/gemini-3.8-flash` (`antigravity`, solo lectura)
 
 ## FASE 1 — ANÁLISIS PARALELO (Solo lectura)
 Lanza en paralelo a los tres especialistas multimodales (usando la cadena multimodal en `opencode_2` o fallback):

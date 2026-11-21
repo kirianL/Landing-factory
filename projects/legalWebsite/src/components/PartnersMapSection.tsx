@@ -74,12 +74,14 @@ export const PartnersMapSection: React.FC = () => {
 
           {/* Active jurisdiction card */}
           <div className="partners-card" aria-live="polite">
-            <div className="partners-card__country">{selectedPin.country}</div>
-            <ul className="partners-card__list">
-              {selectedPin.partners.map((partner) => (
-                <li key={partner}>{partner}</li>
-              ))}
-            </ul>
+            <div key={selectedPin.id} className="partners-card__body">
+              <div className="partners-card__country">{selectedPin.country}</div>
+              <ul className="partners-card__list">
+                {selectedPin.partners.map((partner) => (
+                  <li key={partner}>{partner}</li>
+                ))}
+              </ul>
+            </div>
           </div>
         </div>
 
@@ -125,12 +127,13 @@ export const PartnersMapSection: React.FC = () => {
                   aria-label={`Select ${pin.country} partners`}
                   aria-pressed={isSelected}
                 >
-                  <circle r={16} fill="transparent" />
+                  <circle r={16} fill="transparent" className="map-pin__hit" />
                   <circle
                     r={isSelected ? 9 : 6}
                     fill={isSelected ? 'var(--text-on-dark)' : 'var(--bg-dark)'}
                     stroke="var(--text-on-dark)"
                     strokeWidth="2"
+                    className="map-pin__dot"
                   />
                   <rect
                     x={12}
@@ -139,6 +142,7 @@ export const PartnersMapSection: React.FC = () => {
                     height={22}
                     rx={2}
                     fill={isSelected ? 'var(--text-on-dark)' : 'rgba(23, 0, 0, 0.9)'}
+                    className="map-pin__badge"
                   />
                   <text
                     x={20}
@@ -146,6 +150,7 @@ export const PartnersMapSection: React.FC = () => {
                     fontSize="11"
                     fontWeight={isSelected ? 600 : 400}
                     fill={isSelected ? 'var(--bg-dark)' : 'var(--text-on-dark)'}
+                    className="map-pin__label"
                   >
                     {pin.country}
                   </text>

@@ -38,8 +38,27 @@
   background-color: var(--bg-light);
   color: var(--text-on-light);
   padding: 20px 22px;
+  width: 100%;
   max-width: 300px;
+  min-height: 212px;
   border-radius: 2px;
+  display: flex;
+  flex-direction: column;
+}
+
+.partners-card__body {
+  animation: partnersCardFadeIn var(--dur-mid) var(--ease-out);
+}
+
+@keyframes partnersCardFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .partners-card__country {
@@ -75,11 +94,38 @@
 
 .map-pin {
   cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
 }
 
-.map-pin:focus-visible circle {
+.map-pin:focus,
+.map-pin:focus-visible {
+  outline: none;
+}
+
+.map-pin__dot,
+.map-pin__badge,
+.map-pin__label {
+  transition: fill var(--dur-mid) var(--ease-out), stroke var(--dur-mid) var(--ease-out),
+    stroke-width var(--dur-mid) var(--ease-out), r var(--dur-mid) var(--ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .map-pin:hover .map-pin__badge {
+    stroke: rgba(255, 253, 241, 0.35);
+    stroke-width: 1;
+  }
+}
+
+.map-pin:focus-visible .map-pin__dot {
   stroke: var(--accent-garnet);
   stroke-width: 3;
+}
+
+.map-pin:focus-visible .map-pin__badge {
+  stroke: var(--accent-garnet);
+  stroke-width: 1.5;
 }
 
 @media (max-width: 960px) {

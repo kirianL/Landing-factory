@@ -43,12 +43,12 @@ Clasifica la solicitud en uno de estos niveles para dimensionar el análisis:
 1. Lanza los análisis independientes en paralelo cuando sea posible, pasando únicamente el contexto concreto de la solicitud y los archivos afectados.
 2. Todos los especialistas trabajan en modo **solo lectura** (`edit: deny`, `write: deny`): devuelven hallazgos y recomendaciones; nunca editan archivos.
 3. **Resiliencia y Orquestación Automática del Fallback (6 pasos)**:
-   - Protocolo determinista ante cualquier fallo de `opencode_2`:
-     1. Detectar el fallo (`transient`, `rate_limit`, `unavailable`, `capability`, `auth`).
-     2. Ejecutar `node <LandingFactory>/scripts/resolve-model-fallback.mjs --agent <especialista> --error-type <tipo> --exclude <modelos-fallidos> --log-file docs/design/model-fallback-log.md`.
-     3. Leer `selectedModel` y `action` de la salida JSON.
-     4. Volver a delegar `delegate_task` en `opencode_2` usando `selectedModel` (si `action` es `USE_FALLBACK` o `RETRY_PRIMARY`).
-     5. Confirmar que el subagente respondió correctamente.
+   - Protocolo determinista ante cualquier fallo de delegación:
+     1. Detectar y clasificar el fallo (`transient`, `rate_limit`, `quota_exhausted`, `unavailable`, `capability`, `permission_denied`, `auth`).
+     2. Ejecutar `node <LandingFactory>/scripts/resolve-model-fallback.mjs --agent <especialista> --error-type <tipo> --failed-model <modelo> --exclude <modelos-fallidos> --state-file docs/design/model-health-state.json --log-file docs/design/model-fallback-log.md`.
+     3. Leer `selectedModel`, `executionTarget` (`providerInstanceId`, `model`, `executionMethod`) y `action` de la salida JSON.
+     4. Volver a delegar `delegate_task` usando `executionTarget.providerInstanceId` y `executionTarget.model` (si `action` es `USE_FALLBACK` o `RETRY_PRIMARY`).
+     5. Confirmar que el subagente respondió correctamente sin alterar los modelos base de `.opencode/agents/`.
      6. Registrar el resultado final en `docs/design/model-fallback-log.md`.
    - Perfiles de capacidad:
      - **Perfil A (Visual / Multimodal)**: `visual-analyst`, `ui-ux-designer`, `asset-researcher`, `visual-qa`. Si la tarea requiere analizar imágenes/capturas, el sustituto **debe** admitir visión; nunca sustituyas por un modelo solo-texto.

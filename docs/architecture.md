@@ -36,22 +36,26 @@
 
 - En OpenCode CLI independiente (`opencode` v2.3.2), el modelo `google/gemini-4-hydrogen` existe en el catálogo pero requiere credenciales directas de Google/OpenRouter si se ejecuta fuera de T3 Code. Dentro de **T3 Code**, **Gemini 4 Hydrogen** (`antigravity`) actúa como coordinador/implementador y delega a `opencode_2` (OpenCode) sin costos adicionales en los subagentes.
 
-## Sistema Inteligente de Fallback (`scripts/resolve-model-fallback.mjs`)
+## Sistema Inteligente de Fallback Multiproveedor (`scripts/resolve-model-fallback.mjs` + `scripts/model-registry.json`)
 
-Para evitar bloqueos por indisponibilidad, límites de uso o retirada de modelos gratuitos en los 6 especialistas de solo lectura, LandingFactory incluye un selector dinámico basado en el catálogo real (`opencode models` + metadatos públicos de OpenRouter):
+Para evitar bloqueos por indisponibilidad, límites de uso, cuotas agotadas o retirada de modelos gratuitos en los 6 especialistas de solo lectura, LandingFactory incluye un selector dinámico multiproveedor basado en tres fuentes:
 
+1. **Fuente A — OpenCode / OpenRouter**: catálogo real (`opencode models`) + metadatos públicos de OpenRouter (`https://openrouter.ai/api/v1/models`) para precios, `input_modalities` y `context_length`.
+2. **Fuente B — T3 Code / Antigravity (`orchestrator_capabilities`)**: consulta de instancias activas y permisos reales de delegación (`canRunChildTask`, `canRunCrossProviderChildTask`, `constraints`).
+   - *Limitación verificada*: `orchestrator_capabilities` expone qué `providerInstanceId` está habilitado (`opencode_2` y `antigravity` activos; `opencode`, `codex`, `claudeAgent`, etc. deshabilitados), pero no expone precios ni modalidades de visión; por ello se complementa con el registro local.
+3. **Fuente C — Registro Local Verificable (`scripts/model-registry.json`)**: define por modelo `provider`, `providerInstanceId`, `executionMethod`, `profiles`, `inputModalities`, `outputModalities`, `contextLength`, `freeStatus` (`verified_free` | `included_in_session` | `paid` | `unknown`), `priority`, `delegatable` y `knownConstraints`. Nunca asume gratuidad por nombre cuando el precio es `unknown`.
+
+### Perfiles, Selección y Recuperación
 1. **Perfiles de capacidad**:
-   - **Perfil A (Visual / Multimodal)**: `visual-analyst`, `ui-ux-designer`, `asset-researcher`, `visual-qa`. Exige soporte de visión/imágenes (`input_modalities` con `image`); nunca degrada silenciosamente a modelos solo-texto cuando la tarea requiere analizar capturas.
-   - **Perfil B (Planificación y Razonamiento)**: `implementation-planner`. Prioriza razonamiento, arquitectura y contexto amplio.
-   - **Perfil C (Revisión Técnica y Código)**: `code-reviewer`. Prioriza análisis de código, errores y seguridad.
-2. **Política de reintentos y recuperación**:
-   - Primer error `transient`: 1 reintento sobre el modelo principal.
-   - Segundo error `transient` o errores `rate_limit`, `unavailable`, `capability`: exclusión temporal en la ejecución y selección inmediata del siguiente candidato gratuito compatible.
-   - Error `auth`: detención sin reintentos para intervención del usuario.
-   - Prevención de ciclos mediante conjunto de modelos excluidos (`--exclude`).
-3. **Restricciones económicas y observabilidad**:
-   - Verifica gratuidad real (precio `0` en prompt/completion o modelos `-free` de OpenCode) y prohíbe escalar automáticamente a modelos de pago.
-   - Registra cada evento de fallback en `docs/design/model-fallback-log.md` sin guardar claves ni tokens.
-4. **Limitaciones**:
-   - En OpenCode CLI sin red hacia `openrouter.ai`, los metadatos de precio/modalidad de OpenRouter se evalúan con heurísticas locales hasta restablecer conexión.
-   - Si ningún modelo gratuito compatible está disponible en `opencode_2`, el flujo detiene únicamente la subtarea afectada (o recurre a `antigravity/gemini-3.8-flash` en modo solo lectura si el flujo lo autoriza).
+   - **Perfil A (Visual / Multimodal)**: `visual-analyst`, `ui-ux-designer`, `asset-researcher`, `visual-qa`. Exige soporte de visión/imágenes (`inputModalities` con `image`) y contexto suficiente; nunca degrada a modelos solo-texto.
+   - **Perfil B (Planificación y Razonamiento)**: `implementation-planner`. Prioriza razonamiento, arquitectura y contexto amplio (`>= 65536`).
+   - **Perfil C (Revisión Técnica y Código)**: `code-reviewer`. Prioriza análisis de código, errores y seguridad; nunca usa modelos exclusivamente visuales.
+2. **Motor de selección inteligente**:
+   - Evalúa compatibilidad de perfil, permisos de delegación (`delegatable`), política de gratuidad (`--free-policy strict` por defecto; `allow-included` solo si se autoriza fallback incluido de sesión como `antigravity/gemini-3.8-flash`), historial reciente de fallos/cooldown (`--state-file`), prioridad configurada e **independencia respecto al proveedor que falló** (`--failed-provider`, `--used-providers`).
+3. **Clasificación de errores y políticas**:
+   - `transient`: 1 reintento en intento 1; al 2.º fallo entra en cooldown y activa fallback.
+   - `rate_limit` / `quota_exhausted` / `unavailable` / `capability`: cooldown inmediato sobre el modelo (y penalización temporal al proveedor en `rate_limit`/`quota_exhausted`), seleccionando prioritariamente un proveedor independiente.
+   - `permission_denied`: descarta el `providerInstanceId` denegado y busca otro autorizado o detiene con `STOP_PERMISSION_DENIED`.
+   - `auth`: detención inmediata (`STOP_AUTH_REQUIRED`) sin reintentos ni escalado a modelos de pago.
+4. **Observabilidad**:
+   - Registra cada evento en `docs/design/model-fallback-log.md` (sin guardar claves ni tokens) y persiste cooldowns opcionalmente en `docs/design/model-health-state.json`.

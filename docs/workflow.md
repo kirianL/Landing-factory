@@ -36,11 +36,11 @@ Ejecuta directamente las Fases 5, 6 y 7 sobre un proyecto ya implementado para a
 
 ## Flujo de Fallback Inteligente de Modelos (6 Pasos)
 
-1. Detectar el fallo (`transient`, `rate_limit`, `unavailable`, `capability`, `auth`).
-2. Ejecutar `node scripts/resolve-model-fallback.mjs --agent <nombre> --error-type <tipo> --exclude <fallidos> --log-file docs/design/model-fallback-log.md`.
-3. Leer `selectedModel` y `action` del JSON devuelto.
-4. Volver a delegar `delegate_task` en `opencode_2` con el modelo alternativo (o detener si no hay alternativa gratuita compatible).
-5. Confirmar que el subagente respondió correctamente.
+1. Detectar y clasificar el fallo (`transient`, `rate_limit`, `quota_exhausted`, `unavailable`, `capability`, `permission_denied`, `auth`).
+2. Ejecutar `node scripts/resolve-model-fallback.mjs --agent <nombre> --error-type <tipo> --failed-model <modelo> --exclude <fallidos> --state-file docs/design/model-health-state.json --log-file docs/design/model-fallback-log.md`. (Para autorizar último recurso incluido de sesión en Antigravity cuando no queden gratuitos verificados, añadir `--free-policy allow-included`).
+3. Leer `selectedModel`, `executionTarget` (`providerInstanceId`, `model`, `executionMethod`) y `action` del JSON devuelto.
+4. Volver a delegar `delegate_task` usando `executionTarget.providerInstanceId` y `executionTarget.model` (o detener si `action` es `STOP_*`).
+5. Confirmar que el subagente respondió correctamente sin modificar los modelos principales configurados en `.opencode/agents/`.
 6. Registrar el resultado en `docs/design/model-fallback-log.md` sin exponer claves ni tokens.
 
 ## Recuperación de Sesión (`/resume-landing`) y Publicación (`/publish-landing`)

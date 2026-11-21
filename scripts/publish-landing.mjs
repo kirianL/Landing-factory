@@ -2,7 +2,7 @@
 import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -24,15 +24,25 @@ const MANDATORY_GITIGNORE_RULES = [
   'docs/design/session-checkpoint.json',
   'docs/design/quality-gate*.json',
   'docs/design/compare-report.json',
+  'docs/design/visual-credit-state.json',
+  'docs/design/visual-engine-log.*',
+  'docs/design/visual-plan.json',
+  'docs/design/visual-manifest.json',
+  '.visual-engine-state/',
 ];
 
 const INTERNAL_EXCLUDE_PATTERNS = [
   /(^|[\\/])\.opencode([\\/]|$)/,
+  /(^|[\\/])\.visual-engine-state([\\/]|$)/,
   /^docs[\\/]design[\\/]captures([\\/]|$)/,
   /^docs[\\/]design[\\/]model-fallback-log\.md$/,
   /^docs[\\/]design[\\/]session-checkpoint\.json(\.corrupt-.*\.bak)?$/,
   /^docs[\\/]design[\\/]quality-gate.*\.json$/,
   /^docs[\\/]design[\\/]compare-report\.json$/,
+  /^docs[\\/]design[\\/]visual-credit-state\.json$/,
+  /^docs[\\/]design[\\/]visual-engine-log\..*$/,
+  /^docs[\\/]design[\\/]visual-plan\.json$/,
+  /^docs[\\/]design[\\/]visual-manifest\.json$/,
   /resolve-model-fallback\.mjs$/,
   /quality-gate\.mjs$/,
   /(^|[\\/])\.env(\..+)?$/,
@@ -40,6 +50,8 @@ const INTERNAL_EXCLUDE_PATTERNS = [
 ];
 
 const SECRET_PATTERNS = [
+  { name: 'Recraft API token assignment', regex: /\bRECRAFT_API_(?:TOKEN|KEY)\s*=\s*['"]?[A-Za-z0-9._~+/-]{12,}['"]?/g },
+  { name: 'Recraft-style token', regex: /\brc_[a-zA-Z0-9_-]{16,}\b/g },
   { name: 'OpenAI/OpenRouter-style key', regex: /\bsk-(?:or-v1-)?[a-zA-Z0-9_-]{20,}\b/g },
   { name: 'GitHub classic token', regex: /\bghp_[a-zA-Z0-9]{20,}\b/g },
   { name: 'GitHub fine-grained token', regex: /\bgithub_pat_[a-zA-Z0-9_]{20,}\b/g },
@@ -306,4 +318,16 @@ function main() {
   if (status === 'BLOCKED') process.exitCode = 2;
 }
 
-main();
+export {
+  MANDATORY_GITIGNORE_RULES,
+  INTERNAL_EXCLUDE_PATTERNS,
+  SECRET_PATTERNS,
+  isExcludedInternal,
+  scanSecrets,
+  ensureGitignore,
+};
+
+const isDirectRun = process.argv[1] && pathToFileURL(path.resolve(process.argv[1])).href === import.meta.url;
+if (isDirectRun) {
+  main();
+}

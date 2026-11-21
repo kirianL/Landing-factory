@@ -1,0 +1,103 @@
+{
+  "version": "1.0.0",
+  "updatedAt": "2026-11-21",
+  "note": "Los valores estimatedCredits son solo estimaciones conservadoras para reserva previa en CreditManager. En modo LIVE siempre prevalece el campo 'credits' devuelto por Recraft API.",
+  "providers": {
+    "recraft": {
+      "baseUrl": "https://external.api.recraft.ai/v1",
+      "defaultModel": "recraftv4_1",
+      "styleCreationEstimatedCredits": 5,
+      "models": {
+        "recraftv4_1": {
+          "displayName": "Recraft V4.1",
+          "type": "raster",
+          "supportsStyles": true,
+          "supportsStyleReferences": true,
+          "supportsImageToImage": true,
+          "supportsVector": false,
+          "maxPromptLength": 10000,
+          "defaultSize": "1024x1024",
+          "estimatedCredits": 35
+        },
+        "recraftv4_1_flash_v2": {
+          "displayName": "Recraft V4.1 Flash V2",
+          "type": "raster",
+          "supportsStyles": false,
+          "supportsStyleReferences": false,
+          "supportsImageToImage": false,
+          "supportsVector": false,
+          "maxPromptLength": 10000,
+          "defaultSize": "1024x1024",
+          "estimatedCredits": 7
+        },
+        "recraftv4": {
+          "displayName": "Recraft V4",
+          "type": "raster",
+          "supportsStyles": true,
+          "supportsStyleReferences": true,
+          "supportsImageToImage": true,
+          "supportsVector": false,
+          "maxPromptLength": 10000,
+          "defaultSize": "1024x1024",
+          "estimatedCredits": 40
+        },
+        "recraftv4_pro": {
+          "displayName": "Recraft V4 Pro",
+          "type": "raster",
+          "supportsStyles": true,
+          "supportsStyleReferences": true,
+          "supportsImageToImage": true,
+          "supportsVector": false,
+          "maxPromptLength": 10000,
+          "defaultSize": "1024x1024",
+          "estimatedCredits": 250
+        },
+        "recraftv4_vector": {
+          "displayName": "Recraft V4 Vector",
+          "type": "vector",
+          "supportsStyles": true,
+          "supportsStyleReferences": true,
+          "supportsImageToImage": false,
+          "supportsVector": true,
+          "maxPromptLength": 10000,
+          "defaultSize": "1024x1024",
+          "estimatedCredits": 80
+        },
+        "recraftv4_styles": {
+          "displayName": "Recraft V4 Styles",
+          "type": "raster",
+          "supportsStyles": true,
+          "supportsStyleReferences": true,
+          "requiresStyleReference": true,
+          "supportsImageToImage": false,
+          "supportsVector": false,
+          "maxPromptLength": 10000,
+          "defaultSize": "1024x1024",
+          "estimatedCredits": 40
+        },
+        "recraftv3": {
+          "displayName": "Recraft V3",
+          "type": "raster",
+          "supportsStyles": true,
+          "supportsStyleReferences": false,
+          "supportsImageToImage": true,
+          "supportsVector": false,
+          "maxPromptLength": 1000,
+          "defaultSize": "1024x1024",
+          "estimatedCredits": 40
+        },
+        "recraftv3_vector": {
+          "displayName": "Recraft V3 Vector",
+          "type": "vector",
+          "supportsStyles": true,
+          "supportsStyleReferences": false,
+          "supportsImageToImage": false,
+          "supportsVector": true,
+          "maxPromptLength": 1000,
+          "defaultSize": "1024x1024",
+          "estimatedCredits": 80
+        }
+      }
+    }
+  }
+}

@@ -54,9 +54,11 @@ Lanza `@implementation-planner` (`opencode/beam-free`) con los tres informes y l
 ## FASE 3 — PREPARACIÓN DE ASSETS (Solo Gemini Hydrogen)
 **Gemini Hydrogen** es el único autorizado para escribir/modificar archivos:
 1. Recupera assets proporcionados por el usuario en `assets/`.
-2. Genera imágenes equivalentes cuando sea necesario (usando `image-generator` / `imagegen`), respetando composición, iluminación, paleta y proporción.
+2. Ejecuta la planificación y generación controlada con **Visual Asset Engine** (`scripts/visual-engine/engine.mjs` / `node <LandingFactory>/scripts/visual-engine.mjs`):
+   - Ejecuta `VisualPlanner` + `CreativeDirector` + `GenerationStrategy` respetando `REUSE_LOCAL`, `USE_CODE_SVG_OR_CSS` y `SKIP` (no generar imágenes innecesarias para todas las secciones).
+   - Ejecuta `GenerationPipeline` (`DRY_RUN` por defecto; `LIVE` solo con autorización explícita y presupuesto aprobado en `CreditManager`) guardando los assets finales en `public/images/`.
 3. Implementa todos los iconos UI como **SVG en código** (cero emojis, cero iconos raster).
-4. Verifica proporciones y optimiza rutas antes de maquetar.
+4. Verifica proporciones, rutas relativas e incorpora cada asset generado en los componentes correspondientes de la landing.
 
 ## FASE 4 — IMPLEMENTACIÓN (Solo Gemini Hydrogen)
 Siguiendo `docs/design/implementation-plan.md` y la skill `design-to-code`:

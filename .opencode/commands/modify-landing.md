@@ -79,6 +79,9 @@ Reglas por nivel:
 
 **Gemini 4 Hydrogen** es el único agente autorizado a editar archivos, instalar dependencias o ejecutar comandos:
 - Modifica únicamente lo necesario; preserva componentes, funcionalidades y el sistema de diseño existente (salvo que el usuario pida cambiarlo).
+- **Integración incremental con Visual Asset Engine**:
+  - Cambios de texto, espaciado o colores no deben disparar regeneración de imágenes existentes.
+  - Si la modificación afecta recursos visuales, identifica exactamente qué asset(s) cambian, conserva los restantes intactos, reutiliza caché (`GenerationCache`) y `style_id` del proyecto cuando corresponda, y actualiza las referencias en los componentes afectados.
 - Mantén consistencia visual, responsive y accesibilidad (`SVG` para iconos, cero emojis, sin `object-fit` deformado, sin dependencias innecesarias).
 - No generes contenido ficticio del cliente ni imágenes arbitrarias; no realices refactorizaciones fuera del alcance ni elimines archivos/funcionalidades sin autorización.
 

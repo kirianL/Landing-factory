@@ -77,4 +77,5 @@ LandingFactory/
 - [Arquitectura del Sistema](docs/architecture.md)
 - [Pipeline y Fases de Ejecución](docs/workflow.md)
 - [Instalación y Uso Diario](docs/setup.md)
+- [Visual Asset Engine (Recraft API)](docs/visual-asset-engine.md)
 - [Auditoría de Estabilidad](docs/audits/final-stability-audit.md)

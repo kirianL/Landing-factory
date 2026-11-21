@@ -7,3 +7,4 @@ docs/design/captures/
 projects/*/node_modules/
 projects/*/dist/
 projects/*/.next/
+.visual-engine-state/

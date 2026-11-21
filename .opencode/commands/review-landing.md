@@ -17,6 +17,6 @@ Ejecuta una revisión completa sobre el proyecto actual sin reiniciar la impleme
 3. **Auditoría paralela (Solo lectura — con fallback obligatorio si un modelo falla o no está disponible)**:
    - Lanza `@visual-qa` (cadena multimodal: `openrouter/google/gemma-4-31b-it:free` → `openrouter/google/gemma-4-26b-a4b-it:free` → `openrouter/nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free` → `openrouter/openrouter/free` → `antigravity/gemini-3.8-flash`) comparando `references/` vs `docs/design/captures/`.
    - Lanza `@code-reviewer` (`opencode/deepseek-v4.1-flash-free` → `opencode/flint-40b-free` → `openrouter/openrouter/free` → `antigravity/gemini-3.8-flash`) revisando calidad, A11y, SEO, rendimiento, consola y responsive.
-4. **Consolidación**:
+4. **Consolidación y Quality Gate**:
    - Guarda el resultado visual en `docs/design/visual-qa.md` y presenta ambos informes priorizados al usuario.
-   - Si el usuario pidió corregir automáticamente o estamos en sesión de Gemini Hydrogen con autorización para corregir, aplica las correcciones priorizadas y vuelve a capturar para verificar.
+   - Si se aplican correcciones, cierra el ciclo repitiendo el revisor correspondiente (`@visual-qa` para hallazgos visuales, `@code-reviewer` para hallazgos técnicos críticos) y ejecuta `node <LandingFactory>/scripts/quality-gate.mjs` para emitir el veredicto (`READY`, `READY_WITH_WARNINGS` o `BLOCKED`).

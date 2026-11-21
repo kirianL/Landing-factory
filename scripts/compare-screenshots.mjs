@@ -10,6 +10,10 @@ function parseArgs(argv) {
     diff: null,
     overlay: null,
     threshold: 18,
+    zones: 3,
+    targetSimilarity: 85,
+    viewport: 'desktop',
+    out: null,
   };
 
   for (let i = 0; i < argv.length; i++) {
@@ -19,10 +23,14 @@ function parseArgs(argv) {
     else if (arg === '--diff') opts.diff = path.resolve(argv[++i]);
     else if (arg === '--overlay') opts.overlay = path.resolve(argv[++i]);
     else if (arg === '--threshold') opts.threshold = Number(argv[++i]);
+    else if (arg === '--zones') opts.zones = Math.max(1, Number(argv[++i] || 3));
+    else if (arg === '--target-similarity') opts.targetSimilarity = Number(argv[++i] || 85);
+    else if (arg === '--viewport') opts.viewport = argv[++i] || 'desktop';
+    else if (arg === '--out') opts.out = path.resolve(argv[++i]);
     else if (arg === '--help' || arg === '-h') {
       console.log(`
 Uso:
-  node compare-screenshots.mjs --ref <ref.png> --impl <impl.png> [--diff diff.png] [--overlay overlay.png] [--threshold 18]
+  node compare-screenshots.mjs --ref <ref.png> --impl <impl.png> [--diff diff.png] [--overlay overlay.png] [--threshold 18] [--zones 3] [--target-similarity 85] [--viewport desktop] [--out report.json]
 `);
       process.exit(0);
     }
@@ -50,7 +58,7 @@ async function run() {
   const browser = await chromium.launch({ headless: true });
   try {
     const page = await browser.newPage();
-    const result = await page.evaluate(async ({ refUrl, implUrl, threshold, wantDiff, wantOverlay }) => {
+    const result = await page.evaluate(async ({ refUrl, implUrl, threshold, wantDiff, wantOverlay, zones }) => {
       const loadImg = (src) => new Promise((resolve, reject) => {
         const img = new Image();
         img.onload = () => resolve(img);
@@ -81,6 +89,14 @@ async function run() {
       let sumAbs = 0;
       let sumSq = 0;
 
+      const zoneCount = Math.max(1, zones);
+      const zoneStats = Array.from({ length: zoneCount }, (_, idx) => ({
+        zone: idx + 1,
+        label: zoneCount === 3 ? (idx === 0 ? 'top-hero' : idx === 1 ? 'middle-content' : 'bottom-footer') : `band-${idx + 1}`,
+        totalPixels: 0,
+        diffPixels: 0,
+      }));
+
       const diffCanvas = wantDiff ? document.createElement('canvas') : null;
       let diffCtx = null;
       let diffImgData = null;
@@ -92,6 +108,11 @@ async function run() {
       }
 
       for (let i = 0; i < refData.data.length; i += 4) {
+        const pixelIndex = i / 4;
+        const y = Math.floor(pixelIndex / width);
+        const zoneIdx = Math.min(zoneCount - 1, Math.floor((y / height) * zoneCount));
+        zoneStats[zoneIdx].totalPixels++;
+
         const dr = Math.abs(refData.data[i] - implData.data[i]);
         const dg = Math.abs(refData.data[i + 1] - implData.data[i + 1]);
         const db = Math.abs(refData.data[i + 2] - implData.data[i + 2]);
@@ -101,7 +122,10 @@ async function run() {
         sumSq += avgDiff * avgDiff;
 
         const isDiff = maxDiff > threshold;
-        if (isDiff) diffPixels++;
+        if (isDiff) {
+          diffPixels++;
+          zoneStats[zoneIdx].diffPixels++;
+        }
 
         if (diffImgData) {
           if (isDiff) {
@@ -139,13 +163,27 @@ async function run() {
       const mae = sumAbs / totalPixels;
       const rmse = Math.sqrt(sumSq / totalPixels);
 
+      const diffPercent = Number(((diffPixels / totalPixels) * 100).toFixed(2));
+      const similarityPercent = Number((100 - diffPercent).toFixed(2));
+      const sections = zoneStats.map((z) => {
+        const zDiff = z.totalPixels ? (z.diffPixels / z.totalPixels) * 100 : 0;
+        return {
+          zone: z.zone,
+          label: z.label,
+          similarityPercent: Number((100 - zDiff).toFixed(2)),
+          diffPercent: Number(zDiff.toFixed(2)),
+        };
+      });
+
       return {
         refDimensions: { width: refImg.width, height: refImg.height },
         implDimensions: { width: implImg.width, height: implImg.height },
         comparedDimensions: { width, height },
         totalPixels,
         diffPixels,
-        diffPercent: Number(((diffPixels / totalPixels) * 100).toFixed(2)),
+        diffPercent,
+        similarityPercent,
+        sections,
         mae: Number(mae.toFixed(2)),
         rmse: Number(rmse.toFixed(2)),
         diffDataUrl,
@@ -157,6 +195,7 @@ async function run() {
       threshold: opts.threshold,
       wantDiff: Boolean(opts.diff),
       wantOverlay: Boolean(opts.overlay),
+      zones: opts.zones,
     });
 
     if (opts.diff && result.diffDataUrl) {
@@ -168,7 +207,17 @@ async function run() {
       fs.writeFileSync(opts.overlay, Buffer.from(result.overlayDataUrl.split(',')[1], 'base64'));
     }
 
-    const { diffDataUrl, overlayDataUrl, ...summary } = result;
+    const { diffDataUrl, overlayDataUrl, ...rawSummary } = result;
+    const summary = {
+      viewport: opts.viewport,
+      targetSimilarity: opts.targetSimilarity,
+      meetsTarget: rawSummary.similarityPercent >= opts.targetSimilarity,
+      ...rawSummary,
+    };
+    if (opts.out) {
+      fs.mkdirSync(path.dirname(opts.out), { recursive: true });
+      fs.writeFileSync(opts.out, JSON.stringify(summary, null, 2), 'utf8');
+    }
     console.log(JSON.stringify(summary, null, 2));
   } finally {
     await browser.close();

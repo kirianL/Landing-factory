@@ -32,8 +32,17 @@
 
 Ejecuta directamente las Fases 5, 6 y 7 sobre un proyecto ya implementado para auditar fidelidad visual y calidad técnica sin reconstruir desde cero.
 
-## Flujo de Fallback Inteligente de Modelos
+## Flujo de Fallback Inteligente de Modelos (6 Pasos)
 
-1. Ante fallo o indisponibilidad de un modelo principal en `opencode_2`, ejecutar `node scripts/resolve-model-fallback.mjs --agent <nombre> --error-type <tipo> --exclude <fallidos> --log-file docs/design/model-fallback-log.md`.
-2. El script consulta el catálogo real (`opencode models` + metadatos públicos de OpenRouter cuando hay red), filtra únicamente modelos gratuitos compatibles con el perfil del agente (exigiendo visión en Perfil A) y devuelve el siguiente candidato o detiene la subtarea si no hay alternativa gratuita compatible.
-3. Todo evento se registra en `docs/design/model-fallback-log.md` sin exponer claves ni tokens.
+1. Detectar el fallo (`transient`, `rate_limit`, `unavailable`, `capability`, `auth`).
+2. Ejecutar `node scripts/resolve-model-fallback.mjs --agent <nombre> --error-type <tipo> --exclude <fallidos> --log-file docs/design/model-fallback-log.md`.
+3. Leer `selectedModel` y `action` del JSON devuelto.
+4. Volver a delegar `delegate_task` en `opencode_2` con el modelo alternativo (o detener si no hay alternativa gratuita compatible).
+5. Confirmar que el subagente respondió correctamente.
+6. Registrar el resultado en `docs/design/model-fallback-log.md` sin exponer claves ni tokens.
+
+## LandingFactory Quality Gate y Cierre de Auditoría
+
+- **Regla de re-auditoría tras correcciones**: hallazgo crítico → repetir `@code-reviewer`; hallazgo visual → repetir `@visual-qa`; cambio estructural → repetir ambos; cambio trivial → verificar solo las pruebas afectadas.
+- **Similitud visual por sección**: `compare-screenshots.mjs --zones 3 --target-similarity 85 --out docs/design/compare-report.json`.
+- **Quality Gate (`scripts/quality-gate.mjs`)**: valida compilación/build, responsive sin overflow (`1440×900`, `768×1024`, `390×844`), consola/red limpias, revisión visual, revisión técnica y accesibilidad básica, separando `blockers`, `warnings` y `notApplicable`. Nunca declara `PASS` una prueba no ejecutada.

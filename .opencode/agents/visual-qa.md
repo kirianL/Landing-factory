@@ -51,4 +51,4 @@ Entrega tu informe completo en Markdown estructurado listo para guardarse en `do
 1. **Veredicto de Ronda** (`PASS` | `NEEDS_FIXES` | `FAIL`).
 2. **Resumen Ejecutivo por Viewport**.
 3. **Lista Priorizada de Discrepancias** (siguiendo el orden de prioridad).
-4. **Verificación de Reglas Prohibidas** (sin emojis, sin screenshot-como-fondo, sin imágenes deformadas, sin overflow horizontal).
+4. **Verificación de Reglas Prohibidas** (sin emojis, sin screenshot-como-fondo, sin imágenes deformadas, sin overflow horizontal, y sin patrones Anti-AI Slop introducidos fuera de la referencia: kickers en mayúsculas, `border-l-4` de colores, iconos en cajas pastel, glows/degradados morados-azules, puntos pulsantes o tarjetas idénticas con `shadow-md` excesiva).

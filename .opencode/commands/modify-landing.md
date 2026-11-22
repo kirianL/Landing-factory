@@ -84,6 +84,7 @@ Reglas por nivel:
   - Si la modificación afecta recursos visuales, identifica exactamente qué asset(s) cambian, conserva los restantes intactos, reutiliza caché (`GenerationCache`) y `style_id` del proyecto cuando corresponda, y actualiza las referencias en los componentes afectados.
 - Mantén consistencia visual, responsive y accesibilidad (`SVG` para iconos, cero emojis, sin `object-fit` deformado, sin dependencias innecesarias).
 - **Regla de capitalización (Sentence case)**: nunca escribas dos o más palabras seguidas con mayúscula inicial (evitar Title Case como *"Conexión Directa Con La Banca"*); usa mayúscula solo al inicio de la oración y en nombres propios, entidades oficiales o siglas (`Costa Rica`, `Banco Nacional`, `SINPE`, `MONEX`, `BCCR`, `BAC`, `BCR`, `SUGEF`, `Hacienda`).
+- **Reglas Anti-AI Slop**: prohibido introducir kickers en mayúsculas sobre títulos, `border-l-4` de colores en tarjetas, iconos en cajas pastel, degradados morados/azules, glows de fondo, puntos pulsantes, `grid-cols-3` de tarjetas idénticas con exceso de bordes/`shadow-md`, palabras cliché (*"potencia"*, *"eleva"*, *"revoluciona"*, *"sin fisuras"*) o listas `**Concepto:** explicación`. Prioriza layout editorial con espacio en blanco, divisores `1px` y alto contraste tipográfico (`tracking-tight`).
 - No generes contenido ficticio del cliente ni imágenes arbitrarias; no realices refactorizaciones fuera del alcance ni elimines archivos/funcionalidades sin autorización.
 
 ## FASE 5 — VERIFICACIÓN TÉCNICA Y VISUAL

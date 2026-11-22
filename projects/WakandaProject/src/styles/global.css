@@ -1,0 +1,1172 @@
+@import './tokens.css';
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.65;
+  color: var(--color-text);
+  background-color: var(--color-bg-page);
+  overflow-x: hidden;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-focus-ring);
+  outline-offset: 3px;
+}
+
+.section--dark :focus-visible,
+.contact-block :focus-visible,
+.footer :focus-visible {
+  outline-color: var(--color-amber-light);
+}
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0.75rem;
+  z-index: 100;
+  background-color: var(--color-brown-dark);
+  color: var(--color-white);
+  padding: 0.65rem 1.15rem;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+}
+
+.skip-link:focus {
+  left: 0.75rem;
+}
+
+.container {
+  width: min(100% - 2.5rem, var(--container-max));
+  margin-inline: auto;
+}
+
+.section {
+  padding-block: var(--space-section);
+  position: relative;
+}
+
+.section--alt {
+  background-color: var(--color-bg-alt);
+}
+
+.section--dark {
+  background-color: var(--color-bg-dark);
+  color: var(--color-white);
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--color-orange-cta);
+  margin-bottom: 0.75rem;
+}
+
+.section--dark .eyebrow {
+  color: var(--color-amber-light);
+}
+
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.85rem, 3.2vw, 2.75rem);
+  font-weight: 800;
+  line-height: 1.12;
+  letter-spacing: -0.025em;
+  margin: 0 0 1rem;
+}
+
+.section-lead {
+  font-size: 1.0625rem;
+  color: var(--color-text-muted);
+  max-width: 62ch;
+  margin: 0;
+}
+
+.section--dark .section-lead {
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.875rem 1.65rem;
+  border-radius: var(--radius-pill);
+  font-weight: 600;
+  font-size: 0.95rem;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: transform 200ms var(--ease-out), background-color 200ms var(--ease-out),
+    border-color 200ms var(--ease-out), box-shadow 200ms var(--ease-out);
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+.btn--primary {
+  background-color: var(--color-orange-cta);
+  color: var(--color-white);
+}
+
+.btn--primary:hover {
+  background-color: var(--color-orange-dim);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px -8px rgba(194, 77, 0, 0.55);
+}
+
+.btn--outline {
+  background-color: transparent;
+  color: var(--color-brown-dark);
+  border-color: rgba(59, 29, 10, 0.28);
+}
+
+.btn--outline:hover {
+  background-color: rgba(59, 29, 10, 0.06);
+  border-color: var(--color-brown-dark);
+}
+
+.btn--amber {
+  background-color: var(--color-amber);
+  color: var(--color-ink-dark);
+}
+
+.btn--amber:hover {
+  background-color: var(--color-amber-light);
+  transform: translateY(-2px);
+}
+
+/* Navbar */
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background-color: rgba(250, 246, 238, 0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.navbar__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 76px;
+  gap: 1.5rem;
+}
+
+.navbar__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-shrink: 0;
+}
+
+.navbar__logo {
+  height: 58px;
+  width: 124px;
+  object-fit: cover;
+  object-position: center;
+}
+
+.navbar__links {
+  display: flex;
+  align-items: center;
+  gap: 1.75rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.navbar__link {
+  font-weight: 500;
+  font-size: 0.95rem;
+  color: var(--color-brown-dark);
+  position: relative;
+  padding-block: 0.25rem;
+}
+
+.navbar__link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 2px;
+  background-color: var(--color-orange-cta);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 200ms var(--ease-out);
+}
+
+.navbar__link:hover::after {
+  transform: scaleX(1);
+}
+
+.navbar__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.navbar__toggle {
+  display: none;
+  background: transparent;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  width: 44px;
+  height: 44px;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-brown-dark);
+  cursor: pointer;
+}
+
+.mobile-menu {
+  display: none;
+  border-top: 1px solid var(--color-border);
+  background-color: var(--color-cream);
+  padding: 1rem 1.25rem 1.5rem;
+}
+
+.mobile-menu.is-open {
+  display: block;
+}
+
+.mobile-menu__list {
+  list-style: none;
+  margin: 0 0 1rem;
+  padding: 0;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.mobile-menu__link {
+  display: block;
+  padding: 0.5rem 0;
+  font-weight: 600;
+  font-size: 1.05rem;
+}
+
+/* Hero (Doc Mo Farm geometric collage + Wakanda textures) */
+.hero {
+  position: relative;
+  overflow: hidden;
+  padding-block: clamp(3rem, 6vw, 5rem);
+  background: linear-gradient(135deg, #faf6ee 0%, #f5ebd9 58%, #f8dfb6 100%);
+}
+
+.hero__texture {
+  position: absolute;
+  inset: 0;
+  background-image: url('/images/textures/texture-warm-01.png');
+  background-size: 560px auto;
+  background-repeat: repeat;
+  opacity: 0.08;
+  pointer-events: none;
+}
+
+.hero__grid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  align-items: center;
+  gap: clamp(2rem, 4vw, 4rem);
+}
+
+.hero__title {
+  font-family: var(--font-display);
+  font-size: clamp(2.4rem, 4.4vw, 3.85rem);
+  font-weight: 800;
+  line-height: 1.07;
+  letter-spacing: -0.03em;
+  margin: 0 0 1.25rem;
+  color: var(--color-brown-dark);
+}
+
+.hero__title span {
+  color: var(--color-orange-cta);
+}
+
+.hero__desc {
+  font-size: 1.075rem;
+  color: var(--color-text-muted);
+  margin: 0 0 1.75rem;
+  max-width: 54ch;
+}
+
+.hero__ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.875rem;
+  margin-bottom: 2rem;
+}
+
+.hero__metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.25rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--color-border);
+}
+
+.hero__metric strong {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--color-brown-dark);
+}
+
+.hero__metric span {
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+}
+
+.hero__collage {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-template-rows: repeat(10, 38px);
+  gap: 0.85rem;
+  position: relative;
+}
+
+.hero__photo {
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+  border: 3px solid var(--color-white);
+  position: relative;
+}
+
+.hero__photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 20%;
+}
+
+.hero__photo--a {
+  grid-column: 1 / 8;
+  grid-row: 1 / 8;
+  clip-path: polygon(0 0, 100% 0, 100% 88%, 85% 100%, 0 100%);
+}
+
+.hero__photo--b {
+  grid-column: 7 / 13;
+  grid-row: 2 / 7;
+  z-index: 2;
+}
+
+.hero__photo--c {
+  grid-column: 5 / 12;
+  grid-row: 6 / 11;
+  z-index: 3;
+}
+
+.hero__badge-float {
+  grid-column: 1 / 6;
+  grid-row: 8 / 11;
+  background-color: var(--color-brown-dark);
+  color: var(--color-white);
+  border-radius: var(--radius-md);
+  padding: 0.9rem 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  box-shadow: var(--shadow-card);
+}
+
+.hero__badge-float strong {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  color: var(--color-amber-light);
+}
+
+.hero__badge-float span {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.86);
+}
+
+/* Pillars circular diagram (AgriRestore style) + Misión/Visión */
+.pillars__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: clamp(2.5rem, 5vw, 4.5rem);
+}
+
+.orbit {
+  position: relative;
+  width: min(100%, 440px);
+  aspect-ratio: 1 / 1;
+  margin-inline: auto;
+  display: grid;
+  place-items: center;
+}
+
+.orbit__ring {
+  position: absolute;
+  inset: 14%;
+  border-radius: 50%;
+  border: 2px dashed rgba(90, 45, 12, 0.25);
+  pointer-events: none;
+}
+
+.orbit__center {
+  width: 124px;
+  height: 124px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--color-brown-dark), var(--color-orange-cta));
+  color: var(--color-white);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0.75rem;
+  box-shadow: var(--shadow-card);
+  z-index: 2;
+}
+
+.orbit__center span {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.82rem;
+  line-height: 1.2;
+  margin-top: 0.35rem;
+}
+
+.orbit__node {
+  position: absolute;
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-card);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0.45rem;
+  color: var(--color-brown-dark);
+  transition: transform 220ms var(--ease-out), border-color 220ms var(--ease-out);
+  z-index: 2;
+}
+
+.orbit__node:hover {
+  transform: scale(1.06);
+  border-color: var(--color-orange-cta);
+}
+
+.orbit__node span {
+  font-size: 0.72rem;
+  font-weight: 600;
+  line-height: 1.15;
+  margin-top: 0.28rem;
+}
+
+.orbit__node--1 { top: 2%; left: 50%; transform: translateX(-50%); }
+.orbit__node--2 { top: 22%; right: 3%; }
+.orbit__node--3 { bottom: 22%; right: 3%; }
+.orbit__node--4 { bottom: 2%; left: 50%; transform: translateX(-50%); }
+.orbit__node--5 { bottom: 22%; left: 3%; }
+.orbit__node--6 { top: 22%; left: 3%; }
+
+.orbit__node--1:hover,
+.orbit__node--4:hover {
+  transform: translateX(-50%) scale(1.06);
+}
+
+.mission-cards {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.mission-card {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-left: 4px solid var(--color-orange-cta);
+  border-radius: var(--radius-md);
+  padding: 1.25rem 1.4rem;
+  box-shadow: var(--shadow-card);
+}
+
+.mission-card h3 {
+  font-family: var(--font-display);
+  font-size: 1.125rem;
+  margin: 0 0 0.35rem;
+  color: var(--color-brown-dark);
+}
+
+.mission-card p {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 0.96rem;
+}
+
+/* Values (Doc Mo Farm 3 cards) */
+.values-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin-top: 2.25rem;
+}
+
+.value-card {
+  border-radius: var(--radius-md);
+  padding: 2rem 1.75rem;
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-card);
+  transition: transform 220ms var(--ease-out), box-shadow 220ms var(--ease-out);
+}
+
+.value-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-card-hover);
+}
+
+.value-card--brown {
+  background-color: var(--color-brown-dark);
+  color: var(--color-white);
+}
+
+.value-card--orange {
+  background-color: var(--color-orange-cta);
+  color: var(--color-white);
+}
+
+.value-card--light {
+  background-color: var(--color-surface);
+  color: var(--color-brown-dark);
+}
+
+.value-card__icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 1.25rem;
+  background-color: rgba(255, 255, 255, 0.16);
+}
+
+.value-card--light .value-card__icon {
+  background-color: var(--color-amber-soft);
+  color: var(--color-orange-cta);
+}
+
+.value-card h3 {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  margin: 0 0 0.65rem;
+}
+
+.value-card p {
+  margin: 0;
+  font-size: 0.95rem;
+  opacity: 0.92;
+}
+
+/* Process 01-04 (Our Process duotone cards on dark background) */
+.process__header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+
+.process-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
+}
+
+.process-card {
+  position: relative;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  min-height: 410px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 1.5rem;
+  background-color: var(--color-brown-mid);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  transition: transform 240ms var(--ease-out);
+}
+
+.process-card:hover {
+  transform: translateY(-5px);
+}
+
+.process-card__img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 15%;
+  filter: sepia(0.35) saturate(1.4) contrast(1.05);
+}
+
+.process-card__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(217, 91, 0, 0.25) 0%,
+    rgba(194, 77, 0, 0.58) 45%,
+    rgba(26, 13, 4, 0.94) 100%
+  );
+}
+
+.process-card__content {
+  position: relative;
+  z-index: 2;
+  color: var(--color-white);
+}
+
+.process-card__num {
+  position: absolute;
+  top: 1.1rem;
+  right: 1.25rem;
+  z-index: 2;
+  font-family: var(--font-display);
+  font-size: 3rem;
+  font-weight: 800;
+  line-height: 1;
+  color: rgba(255, 255, 255, 0.9);
+  text-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+}
+
+.process-card__content h3 {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  margin: 0 0 0.5rem;
+}
+
+.process-card__content p {
+  margin: 0;
+  font-size: 0.92rem;
+  color: rgba(255, 255, 255, 0.88);
+}
+
+/* Workshops (Doc Mo Farm 4 horizontal activity cards) */
+.workshops-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
+  margin-top: 2.25rem;
+}
+
+.workshop-card {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+  display: flex;
+  flex-direction: column;
+  transition: transform 220ms var(--ease-out), box-shadow 220ms var(--ease-out);
+}
+
+.workshop-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-card-hover);
+}
+
+.workshop-card__media {
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+}
+
+.workshop-card__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 20%;
+}
+
+.workshop-card__body {
+  padding: 1.25rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.workshop-card__tag {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--color-orange-cta);
+  margin-bottom: 0.35rem;
+}
+
+.workshop-card h3 {
+  font-family: var(--font-display);
+  font-size: 1.125rem;
+  margin: 0 0 0.5rem;
+}
+
+.workshop-card p {
+  margin: 0;
+  font-size: 0.92rem;
+  color: var(--color-text-muted);
+}
+
+/* Quote banner (INSTAPORTFOLIOWK-08) */
+.quote-band {
+  background: linear-gradient(120deg, var(--color-orange-cta), var(--color-brown-mid));
+  color: var(--color-white);
+  padding-block: clamp(2.75rem, 5vw, 4rem);
+  position: relative;
+  overflow: hidden;
+}
+
+.quote-band__texture {
+  position: absolute;
+  inset: 0;
+  background-image: url('/images/textures/texture-warm-01.png');
+  background-size: 520px auto;
+  opacity: 0.14;
+  pointer-events: none;
+}
+
+.quote-band__inner {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  max-width: 780px;
+  margin-inline: auto;
+}
+
+.quote-band blockquote {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 3vw, 2.25rem);
+  font-weight: 800;
+  line-height: 1.22;
+  margin: 0 0 0.75rem;
+}
+
+.quote-band cite {
+  font-style: normal;
+  font-size: 0.95rem;
+  color: var(--color-amber-soft);
+  font-weight: 600;
+}
+
+/* Gallery mosaic (AgriRestore style) */
+.gallery-mosaic {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-top: 2.25rem;
+}
+
+.gallery-item {
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  aspect-ratio: 4 / 3;
+  box-shadow: var(--shadow-card);
+  border: 2px solid var(--color-white);
+}
+
+.gallery-item--tall {
+  grid-row: span 2;
+  aspect-ratio: auto;
+  min-height: 100%;
+}
+
+.gallery-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 20%;
+  transition: transform 350ms var(--ease-out);
+}
+
+.gallery-item:hover img {
+  transform: scale(1.04);
+}
+
+/* Testimonials envelope style (Tour Georgia inspiration) */
+.testimonials-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin-top: 2.5rem;
+}
+
+.envelope-card {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 1.75rem 1.5rem;
+  box-shadow: var(--shadow-card);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  position: relative;
+}
+
+.envelope-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 8px;
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+  background: linear-gradient(90deg, var(--color-brown-dark), var(--color-orange-cta), var(--color-amber));
+}
+
+.envelope-card__avatar {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3px solid var(--color-amber);
+  margin-bottom: 1rem;
+}
+
+.envelope-card__avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 15%;
+}
+
+.envelope-card__name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.1rem;
+  margin: 0 0 0.2rem;
+}
+
+.envelope-card__role {
+  font-size: 0.85rem;
+  color: var(--color-orange-cta);
+  font-weight: 600;
+  margin-bottom: 0.85rem;
+}
+
+.envelope-card__quote {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--color-text-muted);
+}
+
+/* Contact section (AgriRestore solid block + Wakanda texture) */
+.contact-block {
+  position: relative;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(135deg, var(--color-brown-dark), var(--color-brown-mid));
+  color: var(--color-white);
+  padding: clamp(2rem, 4.5vw, 3.75rem);
+  overflow: hidden;
+  box-shadow: var(--shadow-card-hover);
+}
+
+.contact-block__texture {
+  position: absolute;
+  inset: 0;
+  background-image: url('/images/textures/texture-earth-02.png');
+  background-size: 520px auto;
+  opacity: 0.22;
+  pointer-events: none;
+}
+
+.contact-grid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 0.95fr 1.05fr;
+  gap: clamp(2rem, 4vw, 3.5rem);
+  align-items: start;
+}
+
+.contact-info__items {
+  list-style: none;
+  margin: 1.75rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0.9rem;
+}
+
+.contact-info__item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.95rem;
+}
+
+.contact-form {
+  background-color: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: var(--radius-md);
+  padding: 1.75rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.form-field--full {
+  grid-column: 1 / -1;
+}
+
+.form-field label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-amber-soft);
+}
+
+.form-field input,
+.form-field select,
+.form-field textarea {
+  width: 100%;
+  padding: 0.72rem 0.9rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  background-color: rgba(18, 9, 3, 0.55);
+  color: var(--color-white);
+}
+
+.form-field input::placeholder,
+.form-field textarea::placeholder {
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.form-error {
+  font-size: 0.8rem;
+  color: #fecaca;
+}
+
+.form-success {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  background-color: rgba(21, 128, 61, 0.28);
+  border: 1px solid rgba(134, 239, 172, 0.5);
+  border-radius: var(--radius-sm);
+  padding: 0.85rem 1rem;
+  color: #dcfce7;
+  font-weight: 500;
+}
+
+/* Footer */
+.footer {
+  background-color: var(--color-ink-deeper);
+  color: rgba(255, 255, 255, 0.85);
+  padding-block: 3.5rem 2rem;
+}
+
+.footer__grid {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr 1fr;
+  gap: 2rem;
+  padding-bottom: 2.25rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.footer__logo {
+  height: 52px;
+  width: auto;
+  margin-bottom: 1rem;
+}
+
+.footer h3 {
+  font-family: var(--font-display);
+  color: var(--color-white);
+  margin: 0 0 0.85rem;
+  font-size: 1rem;
+}
+
+.footer__links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.55rem;
+  font-size: 0.92rem;
+}
+
+.footer__links a:hover {
+  color: var(--color-amber-light);
+}
+
+.footer__socials {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.footer__social-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.1);
+  display: grid;
+  place-items: center;
+  transition: background-color 200ms var(--ease-out), transform 200ms var(--ease-out);
+}
+
+.footer__social-btn:hover {
+  background-color: var(--color-orange-cta);
+  transform: translateY(-2px);
+}
+
+.footer__bottom {
+  padding-top: 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 1rem;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .hero__grid,
+  .pillars__grid,
+  .contact-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .process-grid,
+  .workshops-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .values-grid,
+  .testimonials-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .gallery-mosaic {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .footer__grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 767px) {
+  .navbar__links,
+  .navbar__actions .btn {
+    display: none;
+  }
+
+  .navbar__toggle {
+    display: inline-flex;
+  }
+
+  .hero__collage {
+    grid-template-rows: repeat(8, 34px);
+  }
+
+  .orbit {
+    width: 100%;
+    aspect-ratio: auto;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.85rem;
+  }
+
+  .orbit__ring {
+    display: none;
+  }
+
+  .orbit__center {
+    grid-column: 1 / -1;
+    width: 100%;
+    height: auto;
+    border-radius: var(--radius-md);
+    padding: 1rem;
+  }
+
+  .orbit__node {
+    position: static;
+    transform: none !important;
+    width: 100%;
+    height: auto;
+    border-radius: var(--radius-md);
+    padding: 1rem 0.75rem;
+  }
+
+  .values-grid,
+  .process-grid,
+  .workshops-grid,
+  .testimonials-grid,
+  .gallery-mosaic,
+  .contact-form,
+  .footer__grid,
+  .hero__metrics {
+    grid-template-columns: 1fr;
+  }
+
+  .gallery-item--tall {
+    grid-row: span 1;
+    aspect-ratio: 4 / 3;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

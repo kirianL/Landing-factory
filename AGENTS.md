@@ -28,3 +28,13 @@ Este entorno forma parte de **LandingFactory**, una fábrica reutilizable para r
 - **Regla de capitalización (Sentence case obligatorio)**: en textos de interfaz (títulos, subtítulos, botones, etiquetas, menús y listas), usar mayúscula inicial **únicamente en la primera palabra** de la frase. Queda **prohibido** escribir dos o más palabras seguidas con mayúscula inicial (Title Case anglosajón como *"Conexión Directa Con La Banca"* o *"Control Total Para Finanzas"*), salvo nombres propios reales, instituciones oficiales o siglas (`Costa Rica`, `San José`, `Banco Nacional`, `Banco Popular`, `SINPE`, `MONEX`, `BCCR`, `BAC`, `BCR`, `SUGEF`, `Hacienda`).
 - **Obligatorio**: distinguir siempre entre datos `observed`, `inferred` y `substituted`; verificar con Playwright en `1440×900`, `768×1024` y `390×844` antes de declarar fidelidad.
 - **Presupuesto**: usar únicamente modelos gratuitos en los 6 especialistas y evitar re-ejecutar especialistas innecesariamente (límite por defecto: 3 rondas visuales).
+
+## Reglas Estrictas de Diseño (Anti-AI Slop)
+
+Aplicables a todo diseño, inferencia visual, componente y copywriting que no contradiga un elemento explícito y verificado en `references/`:
+
+1. **Cero clichés SaaS**: prohibido usar kickers o subtítulos en mayúsculas encima de los títulos. Prohibido usar `border-l-4` de colores en tarjetas. Prohibido encerrar iconos en cajas con fondos pastel.
+2. **Cero efectos "Tech" genéricos**: sin degradados morados/azules, sin manchas de luz neón (glows) de fondo y sin puntos decorativos pulsantes.
+3. **Layout editorial**: evita el típico `grid-cols-3` de tarjetas idénticas. No pongas bordes ni sombras (`shadow-md`) a todo; deja que el texto respire directamente sobre el fondo usando espacio en blanco y líneas divisoras sutiles (`1px`).
+4. **Tipografía con carácter**: usa alto contraste entre títulos grandes (`tracking-tight`) y cuerpo de texto limpio.
+5. **Copywriting humano**: prohibido usar palabras como *"potencia"*, *"eleva"*, *"revoluciona"* o *"sin fisuras"*. Prohibido usar listas con el formato `**Concepto:** explicación`.

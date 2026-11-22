@@ -64,6 +64,11 @@ Lanza `@implementation-planner` (`opencode/beam-free`) con los tres informes y l
 Siguiendo `docs/design/implementation-plan.md` y la skill `design-to-code`:
 Prioridad: 1. Fidelidad visual → 2. Estructura semántica → 3. Imágenes → 4. Responsive → 5. Interacciones → 6. Accesibilidad → 7. Rendimiento.
 Prohibido agregar secciones no presentes en la referencia o usar screenshots completos como fondo.
+Cumple estrictamente las **Reglas Anti-AI Slop** de `AGENTS.md`:
+- Cero clichés SaaS (sin kickers en mayúsculas sobre títulos, sin `border-l-4` de colores, sin iconos en cajas con fondos pastel).
+- Cero efectos "Tech" genéricos (sin degradados morados/azules, sin glows de fondo, sin puntos pulsantes).
+- Layout editorial (evita `grid-cols-3` de tarjetas idénticas y el exceso de bordes/`shadow-md`; usa espacio en blanco y divisores sutiles de `1px`) y tipografía con alto contraste (`tracking-tight` en títulos grandes + cuerpo limpio, en Sentence case).
+- Copywriting humano (sin *"potencia"*, *"eleva"*, *"revoluciona"*, *"sin fisuras"*, ni listas `**Concepto:** explicación`).
 
 ## FASE 5 — RENDERIZADO REAL (Playwright)
 Levanta el servidor local del proyecto y ejecuta el script de captura de LandingFactory:

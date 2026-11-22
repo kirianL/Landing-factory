@@ -1,0 +1,46 @@
+:root {
+  /* Paleta oficial Wakanda Project */
+  --color-brown-dark: #3b1d0a;
+  --color-brown-mid: #5a2d0c;
+  --color-brown-soft: #7c4d2f;
+  --color-orange: #d95b00;
+  --color-orange-cta: #c24d00;
+  --color-orange-dim: #9e3d00;
+  --color-amber: #f59e0b;
+  --color-amber-light: #fbbf24;
+  --color-amber-soft: #fef3c7;
+  --color-cream: #faf6ee;
+  --color-cream-alt: #f2e9da;
+  --color-surface: #ffffff;
+  --color-ink-dark: #1a0d04;
+  --color-ink-deeper: #120903;
+  --color-white: #ffffff;
+
+  /* Semánticos */
+  --color-bg-page: var(--color-cream);
+  --color-bg-alt: var(--color-cream-alt);
+  --color-bg-dark: var(--color-ink-dark);
+  --color-text: var(--color-brown-dark);
+  --color-text-muted: #5c4435;
+  --color-border: rgba(59, 29, 10, 0.14);
+  --color-focus-ring: var(--color-orange-dim);
+  --color-success: #15803d;
+  --color-error: #b91c1c;
+
+  /* Tipografía */
+  --font-display: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+
+  /* Escala y layout */
+  --container-max: 1240px;
+  --space-section: clamp(4rem, 6.5vw, 6rem);
+  --radius-sm: 10px;
+  --radius-md: 18px;
+  --radius-lg: 26px;
+  --radius-pill: 9999px;
+
+  /* Sombras y movimiento */
+  --shadow-card: 0 12px 32px -12px rgba(59, 29, 10, 0.12);
+  --shadow-card-hover: 0 20px 44px -12px rgba(59, 29, 10, 0.2);
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+}

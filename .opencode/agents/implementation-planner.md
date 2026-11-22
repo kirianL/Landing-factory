@@ -27,6 +27,7 @@ Consolidar los informes de `visual-analyst`, `ui-ux-designer` y `asset-researche
 2. **Proyecto nuevo sin stack definido**: elige la arquitectura más limpia, moderna y mantenible acorde al alcance (por ejemplo, Vite + React + Tailwind CSS o Astro/Next.js si hay múltiples rutas, o HTML/CSS/JS limpio si es una landing estática ligera). Justifica la elección.
 3. **Orden macro a micro**: estructura semántica y shell → header y hero → tipografía y escala → secciones repetidas → integración de assets → responsive y estados → verificación Playwright.
 4. **Cero improvisación**: no agregues secciones ni funcionalidades no solicitadas.
+5. **Cumplimiento Anti-AI Slop**: asegura que la arquitectura, estilos y copywriting prohíban kickers en mayúsculas sobre títulos, `border-l-4` de colores, iconos en cajas pastel, degradados morados/azules, glows neón, puntos pulsantes, `grid-cols-3` de tarjetas idénticas con `shadow-md` innecesaria, palabras cliché (*"potencia"*, *"eleva"*, *"revoluciona"*, *"sin fisuras"*) y listas `**Concepto:** explicación`. Prioriza layout editorial con espacio en blanco, divisores `1px` y alto contraste tipográfico (`tracking-tight` en títulos).
 
 ## Qué debe contener el Plan
 

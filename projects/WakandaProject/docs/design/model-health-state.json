@@ -1,0 +1,11 @@
+{
+  "models": {
+    "openrouter/google/gemma-4-31b-it:free": {
+      "failures": 3,
+      "lastErrorType": "unavailable",
+      "lastFailedAt": "2026-11-22T06:48:29.312Z",
+      "cooldownUntil": 1795331009312
+    }
+  },
+  "providers": {}
+}

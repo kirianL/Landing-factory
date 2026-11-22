@@ -18,3 +18,11 @@ Este proyecto hereda la infraestructura global de **LandingFactory** (`~/.config
 - Fuente de verdad: `references/`. Si `references/` está vacío, detente y solicita screenshots al usuario.
 - No inventar secciones, no usar emojis en UI, usar SVG para toda iconografía, no usar screenshots completos como fondo.
 - Validar siempre con Playwright (`1440×900`, `768×1024`, `390×844`) antes de declarar completado.
+
+## Reglas Estrictas de Diseño (Anti-AI Slop)
+
+1. **Cero clichés SaaS**: prohibido usar kickers/subtítulos en mayúsculas encima de títulos, `border-l-4` de colores en tarjetas o iconos encerrados en cajas con fondos pastel.
+2. **Cero efectos "Tech" genéricos**: sin degradados morados/azules, sin manchas de luz neón (glows) de fondo y sin puntos decorativos pulsantes.
+3. **Layout editorial**: evitar `grid-cols-3` de tarjetas idénticas y el exceso de bordes o `shadow-md`; priorizar espacio en blanco y líneas divisoras sutiles (`1px`).
+4. **Tipografía con carácter**: alto contraste entre títulos grandes (`tracking-tight`) y cuerpo de texto limpio, respetando Sentence case.
+5. **Copywriting humano**: prohibido usar *"potencia"*, *"eleva"*, *"revoluciona"* o *"sin fisuras"*, y prohibido usar listas con el formato `**Concepto:** explicación`.

@@ -83,6 +83,7 @@ Reglas por nivel:
   - Cambios de texto, espaciado o colores no deben disparar regeneración de imágenes existentes.
   - Si la modificación afecta recursos visuales, identifica exactamente qué asset(s) cambian, conserva los restantes intactos, reutiliza caché (`GenerationCache`) y `style_id` del proyecto cuando corresponda, y actualiza las referencias en los componentes afectados.
 - Mantén consistencia visual, responsive y accesibilidad (`SVG` para iconos, cero emojis, sin `object-fit` deformado, sin dependencias innecesarias).
+- **Regla de capitalización (Sentence case)**: nunca escribas dos o más palabras seguidas con mayúscula inicial (evitar Title Case como *"Conexión Directa Con La Banca"*); usa mayúscula solo al inicio de la oración y en nombres propios, entidades oficiales o siglas (`Costa Rica`, `Banco Nacional`, `SINPE`, `MONEX`, `BCCR`, `BAC`, `BCR`, `SUGEF`, `Hacienda`).
 - No generes contenido ficticio del cliente ni imágenes arbitrarias; no realices refactorizaciones fuera del alcance ni elimines archivos/funcionalidades sin autorización.
 
 ## FASE 5 — VERIFICACIÓN TÉCNICA Y VISUAL

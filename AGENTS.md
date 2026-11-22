@@ -25,5 +25,6 @@ Este entorno forma parte de **LandingFactory**, una fábrica reutilizable para r
 
 - La referencia en `references/` es la fuente de verdad. Si no hay screenshots en `references/`, **detente y pídelos al usuario**.
 - **Prohibido**: rediseñar libremente, inventar secciones, usar emojis en la UI, usar iconos raster en lugar de SVG, usar fotos aleatorias o usar un screenshot completo como fondo.
+- **Regla de capitalización (Sentence case obligatorio)**: en textos de interfaz (títulos, subtítulos, botones, etiquetas, menús y listas), usar mayúscula inicial **únicamente en la primera palabra** de la frase. Queda **prohibido** escribir dos o más palabras seguidas con mayúscula inicial (Title Case anglosajón como *"Conexión Directa Con La Banca"* o *"Control Total Para Finanzas"*), salvo nombres propios reales, instituciones oficiales o siglas (`Costa Rica`, `San José`, `Banco Nacional`, `Banco Popular`, `SINPE`, `MONEX`, `BCCR`, `BAC`, `BCR`, `SUGEF`, `Hacienda`).
 - **Obligatorio**: distinguir siempre entre datos `observed`, `inferred` y `substituted`; verificar con Playwright en `1440×900`, `768×1024` y `390×844` antes de declarar fidelidad.
 - **Presupuesto**: usar únicamente modelos gratuitos en los 6 especialistas y evitar re-ejecutar especialistas innecesariamente (límite por defecto: 3 rondas visuales).

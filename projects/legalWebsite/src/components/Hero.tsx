@@ -10,12 +10,12 @@ export const Hero: React.FC = () => {
       <div className="container hero__grid">
         <div className="hero__content">
           <h1 className="hero__title">
-            We protect and <span className="hero__title-italic">preserve</span> what you&apos;ve built
+            Protegemos y <span className="hero__title-italic">preservamos</span> lo que usted construyó
           </h1>
 
           <div className="hero__lead-wrap">
             <p className="hero__lead">
-              Legal and financial advisory for private clients and businesses — over 30 years in the market
+              Asesoría legal y financiera para clientes privados y empresas — más de 30 años de trayectoria en la región
             </p>
           </div>
         </div>
@@ -23,7 +23,7 @@ export const Hero: React.FC = () => {
         <div className="hero__visual">
           <img
             src="/images/themis-hero.png"
-            alt="Classical bronze statue of Lady Justice holding scales and sword"
+            alt="Estatua clásica de bronce de la Justicia sosteniendo la balanza y la espada"
             className="hero__statue"
             width={896}
             height={1200}

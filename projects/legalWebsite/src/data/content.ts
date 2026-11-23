@@ -6,36 +6,36 @@ export interface NavItem {
 
 export const NAV_ITEMS: NavItem[] = [
   {
-    label: 'Services',
+    label: 'Servicios',
     href: '#topics',
     subItems: [
-      { label: 'Asset Protection', href: '#topics' },
-      { label: 'Family Protection', href: '#topics' },
-      { label: 'Asset Transfer', href: '#topics' },
-      { label: 'UAE & Cross-Border', href: '#topics' },
+      { label: 'Protección patrimonial', href: '#topics' },
+      { label: 'Sucesión familiar', href: '#topics' },
+      { label: 'Transferencia de activos', href: '#topics' },
+      { label: 'Estructuración regional', href: '#topics' },
     ],
   },
   {
-    label: 'Key Topics',
+    label: 'Temas clave',
     href: '#topics',
     subItems: [
-      { label: 'Trusts & Foundations', href: '#topics' },
-      { label: 'Tax Issues', href: '#topics' },
-      { label: 'Currency Regulation', href: '#topics' },
-      { label: 'Investments via CFC', href: '#topics' },
+      { label: 'Fideicomisos y fundaciones', href: '#topics' },
+      { label: 'Asuntos tributarios', href: '#topics' },
+      { label: 'Regulación cambiaria', href: '#topics' },
+      { label: 'Inversiones en el exterior', href: '#topics' },
     ],
   },
   {
-    label: 'About Us',
+    label: 'Nosotros',
     href: '#about',
     subItems: [
-      { label: 'Our History (Est. 1995)', href: '#about' },
-      { label: 'Global Partners', href: '#partners' },
-      { label: 'Latest News', href: '#news' },
+      { label: 'Nuestra historia (desde 1995)', href: '#about' },
+      { label: 'Aliados en Centroamérica', href: '#partners' },
+      { label: 'Últimas noticias', href: '#news' },
     ],
   },
   {
-    label: 'Contacts',
+    label: 'Contacto',
     href: '#contact',
   },
 ];
@@ -43,37 +43,37 @@ export const NAV_ITEMS: NavItem[] = [
 export const KEY_TOPICS = [
   {
     id: 'foreign-assets',
-    title: 'Foreign Assets',
+    title: 'Activos en el exterior',
     description:
-      'Account opening, structuring and protection of assets in foreign jurisdictions. Current developments and practical solutions.',
+      'Apertura de cuentas, estructuración y resguardo de activos en jurisdicciones internacionales. Criterios vigentes y soluciones prácticas.',
     image: '/images/topic-foreign.jpg',
   },
   {
     id: 'currency-regulation',
-    title: 'Currency Regulation',
+    title: 'Regulación cambiaria',
     description:
-      'Foreign exchange control, reporting requirements for overseas accounts and transactions. How to navigate restrictions.',
+      'Operaciones en divisas, reportes ante el BCCR y supervisión de movimientos transfronterizos en SINPE y MONEX. Cumplimiento bancario.',
     image: '/images/topic-currency.jpg',
   },
   {
     id: 'inheritance',
-    title: 'Inheritance',
+    title: 'Sucesión y herencia',
     description:
-      'Asset succession planning, inheritance structures, and cross-border protection of family wealth and interests.',
+      'Planificación sucesoria, protocolos familiares y protección de intereses patrimoniales entre distintas generaciones.',
     image: '/images/topic-inheritance.jpg',
   },
   {
     id: 'investments-cfc',
-    title: 'Investments via CFC',
+    title: 'Estructuras societarias',
     description:
-      'Controlled foreign companies: taxation, statutory reporting, structuring and international compliance risk mitigation.',
+      'Sociedades de tenencia regional, tributación territorial, reportes ante Hacienda y mitigación de riesgos regulatorios.',
     image: '/images/topic-cfc.jpg',
   },
   {
     id: 'family-foundations',
-    title: 'Trusts & Foundations',
+    title: 'Fideicomisos y fundaciones',
     description:
-      'Private foundations, fiduciary governance, and multi-generational capital preservation frameworks.',
+      'Fundaciones de interés privado en Panamá, gobierno fiduciario y esquemas de preservación de capital a largo plazo.',
     image: '/images/topic-foreign.jpg',
   },
 ];
@@ -81,22 +81,25 @@ export const KEY_TOPICS = [
 export const VIDEOS = [
   {
     id: 'v1',
-    title: 'Wealth Tax & CFC Reporting',
-    description: 'Why this tax does not exist, what takes its place, and how CFC compliance actually works in practice.',
+    title: 'Impuesto al patrimonio y reportes regionales',
+    description:
+      'Qué aplica realmente en Costa Rica y Panamá, qué criterios utiliza Hacienda y cómo documentar el cumplimiento.',
     duration: '08:42',
     thumbnail: '/images/topic-cfc.jpg',
   },
   {
     id: 'v2',
-    title: 'Who are unworthy heirs?',
-    description: 'Let us examine who is legally recognized as an unworthy heir, how courts rule, and how to protect succession.',
+    title: '¿Quiénes pierden la vocación sucesoria?',
+    description:
+      'Analizamos las causales legales de indignidad sucesoria, el criterio de los tribunales y cómo blindar el testamento.',
     duration: '11:15',
     thumbnail: '/images/topic-inheritance.jpg',
   },
   {
     id: 'v3',
-    title: 'Cross-border payment compliance',
-    description: 'Practical risk management for international settlements, correspondent banks, and CRS 2.0 checks.',
+    title: 'Cumplimiento en pagos transfronterizos',
+    description:
+      'Gestión práctica de riesgos en transferencias internacionales, banca corresponsal y verificaciones CRS.',
     duration: '09:30',
     thumbnail: '/images/topic-currency.jpg',
   },
@@ -106,16 +109,16 @@ export const FAQ_CARDS = [
   {
     id: 'faq-1',
     variant: 'light' as const,
-    question: "Does the payment agent's fee depend on the destination country or currency?",
+    question: '¿La comisión del agente de pago depende del país de destino o de la divisa?',
     answer:
-      'Does the agent fee vary depending on the country receiving the funds and the transaction currency? We break down market benchmarks.',
+      '¿Varía la tarifa de intermediación según la jurisdicción receptora y la moneda de liquidación? Desglosamos los rangos de mercado.',
   },
   {
     id: 'faq-2',
     variant: 'dark' as const,
-    question: 'Market rate for a payment agent working with China',
+    question: 'Tarifa de mercado para pagos corporativos desde Centroamérica',
     answer:
-      'What percentage fee for a payment agent do you consider market rate for payments to China? State-owned company, volume up to $1M per month.',
+      '¿Qué porcentaje de comisión resulta estándar para transferencias comerciales de alto volumen hacia Estados Unidos, Europa o Asia?',
   },
 ];
 
@@ -124,77 +127,90 @@ export interface PartnerPin {
   country: string;
   lat: number;
   lon: number;
+  labelSide?: 'left' | 'right';
   partners: string[];
 }
 
 export const PARTNER_PINS: PartnerPin[] = [
   {
-    id: 'russia',
-    country: 'Russia',
-    lat: 55.7558,
-    lon: 37.6173,
-    partners: ['MTS Bank', 'Sberbank Private Banking', 'Alfa-Bank', 'MKB Private Bank', 'Absolut Bank'],
+    id: 'costa-rica',
+    country: 'Costa Rica',
+    lat: 9.9281,
+    lon: -84.0907,
+    labelSide: 'left',
+    partners: [
+      'BAC Credomatic Privado',
+      'Banco Nacional',
+      'Banco de Costa Rica',
+      'Banco Popular',
+      'Grupo Financiero Improsa',
+    ],
   },
   {
-    id: 'switzerland',
-    country: 'Switzerland',
-    lat: 46.948,
-    lon: 7.4474,
-    partners: ['Julius Baer Advisory', 'Lombard Odier Desk', 'Zurich Fiduciary Partners'],
+    id: 'panama',
+    country: 'Panamá',
+    lat: 8.9824,
+    lon: -79.5199,
+    labelSide: 'right',
+    partners: ['Banco General Privado', 'Banistmo Wealth', 'Global Bank Panamá', 'Credicorp Bank'],
   },
   {
-    id: 'cyprus',
-    country: 'Cyprus',
-    lat: 35.1856,
-    lon: 33.3823,
-    partners: ['Limassol Corporate Trust', 'Mediterranean Audit Group'],
+    id: 'guatemala',
+    country: 'Guatemala',
+    lat: 14.6349,
+    lon: -90.5069,
+    labelSide: 'left',
+    partners: ['Banco Industrial Privado', 'G&T Continental', 'BAM Banca Patrimonial'],
   },
   {
-    id: 'uae',
-    country: 'UAE',
-    lat: 25.2048,
-    lon: 55.2708,
-    partners: ['DIFC Wealth Counsel', 'Emirates Private Desk', 'ADGM Structuring'],
+    id: 'el-salvador',
+    country: 'El Salvador',
+    lat: 13.6929,
+    lon: -89.2182,
+    labelSide: 'left',
+    partners: ['Banco Agrícola Privado', 'Banco Cuscatlán', 'Davivienda Salvadoreño'],
   },
   {
-    id: 'china',
-    country: 'China',
-    lat: 31.2304,
-    lon: 121.4737,
-    partners: ['Shanghai Cross-Border Desk', 'Hong Kong Fiduciary Alliance'],
+    id: 'honduras',
+    country: 'Honduras',
+    lat: 14.0723,
+    lon: -87.1921,
+    labelSide: 'right',
+    partners: ['Ficohsa Banca Privada', 'Banco Atlántida', 'Banpaís Corporativo'],
   },
   {
-    id: 'singapore',
-    country: 'Singapore',
-    lat: 1.3521,
-    lon: 103.8198,
-    partners: ['MAS Licensed Family Office Desk', 'Straits Legal Partners'],
+    id: 'nicaragua',
+    country: 'Nicaragua',
+    lat: 12.115,
+    lon: -86.2362,
+    labelSide: 'right',
+    partners: ['Lafise Bancentro', 'Banpro Grupo Promerica', 'BDF Corporativo'],
   },
 ];
 
 export const LATEST_NEWS = [
   {
-    id: 'uae-banking',
+    id: 'regional-banking',
     date: '11.06.2026',
-    title: 'UAE Banking Risks: Common Mistakes by Private Clients',
+    title: 'Riesgos bancarios en la región: errores frecuentes de clientes privados',
     excerpt:
-      'The UAE is rolling out CRS 2.0. Banks are tightening compliance checks on clients, their funds and transactions. Compliance is no longer a one-off procedure.',
+      'Las entidades bajo supervisión de SUGEF y la SBP refuerzan los controles de debida diligencia y origen de fondos. El cumplimiento dejó de ser un trámite único.',
     image: '/images/about-office.jpg',
   },
   {
     id: 'payment-agents',
     date: '09.06.2026',
-    title: 'Payment Agents: Why Businesses Need Them in 2026',
+    title: 'Agentes de pago y corresponsalía: claves operativas en 2026',
     excerpt:
-      'Under sanctions and cross-border restrictions, payment agents have become a key tool for reliable and transparent international transactions.',
+      'Ante exigencias más estrictas en transferencias internacionales, la correcta documentación de pagos transfronterizos garantiza liquidez y trazabilidad.',
     image: '/images/topic-currency.jpg',
   },
   {
     id: 'prenuptial',
     date: '04.06.2026',
-    title: 'Prenuptial Agreements: Why Planning Ahead Makes Sense',
+    title: 'Capitulaciones matrimoniales: por qué planificar con anticipación',
     excerpt:
-      'A prenuptial agreement lets couples decide in advance who keeps what. We explain how it works and why it is better to think about it before, not after.',
+      'Las capitulaciones permiten acordar de forma transparente el régimen de bienes antes de contraer matrimonio y resguardar el patrimonio familiar.',
     image: '/images/topic-cfc.jpg',
   },
 ];

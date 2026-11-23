@@ -15,19 +15,19 @@ export const KeyTopicsSection: React.FC = () => {
       <div className="container">
         <div className="editorial-grid topics-section__header">
           <div className="editorial-eyebrow-col">
-            <span className="eyebrow eyebrow--dark">Key topics</span>
+            <span className="eyebrow eyebrow--dark">Temas clave</span>
           </div>
 
           <div className="editorial-main-col topics-section__heading-row">
             <h2 className="topics-section__heading">
-              Expert materials on asset protection and management
+              Análisis especializado en gestión y defensa patrimonial
             </h2>
 
-            <div className="topics-section__controls" role="group" aria-label="Carousel controls">
+            <div className="topics-section__controls" role="group" aria-label="Controles del carrusel">
               <button
                 type="button"
                 className="icon-square-btn"
-                aria-label="Previous topics"
+                aria-label="Temas anteriores"
                 disabled={startIndex === 0}
                 onClick={() => setStartIndex((i) => Math.max(0, i - 1))}
               >
@@ -36,7 +36,7 @@ export const KeyTopicsSection: React.FC = () => {
               <button
                 type="button"
                 className="icon-square-btn"
-                aria-label="Next topics"
+                aria-label="Siguientes temas"
                 disabled={startIndex >= maxStart}
                 onClick={() => setStartIndex((i) => Math.min(maxStart, i + 1))}
               >
@@ -56,7 +56,7 @@ export const KeyTopicsSection: React.FC = () => {
                 <h3 className="topic-card__title">{topic.title}</h3>
                 <p className="topic-card__desc">{topic.description}</p>
                 <a href="#contact" className="link-with-badge topic-card__link">
-                  <span>Learn more</span>
+                  <span>Conocer más</span>
                   <span className="link-with-badge__box">
                     <ArrowRightIcon size={12} />
                   </span>

@@ -8,22 +8,22 @@ export const AboutSection: React.FC = () => {
       <div className="container">
         <div className="editorial-grid">
           <div className="editorial-eyebrow-col">
-            <span className="eyebrow eyebrow--light">About us</span>
+            <span className="eyebrow eyebrow--light">Nosotros</span>
           </div>
 
           <div className="editorial-main-col">
             <h2 className="about-section__heading">
-              Protecting and preserving the assets of high-net-worth clients
+              Protección y resguardo patrimonial para clientes de alto valor
             </h2>
 
             <p className="about-section__copy">
-              We help wealthy clients safeguard, structure and pass on their assets. Founded in 1995, since 2007 we
-              have worked exclusively with private clients, leading banks and financial institutions across Russia and
-              key international jurisdictions. Confidential and reliable.
+              Ayudamos a familias empresarias y clientes privados a proteger, estructurar y transmitir su patrimonio.
+              Fundada en 1995, desde 2007 nuestra firma trabaja de forma exclusiva con clientes privados, bancos líderes
+              e instituciones financieras en Costa Rica, Panamá y toda Centroamérica. Confidencialidad y respaldo jurídico.
             </p>
 
             <a href="#contact" className="link-with-badge about-section__link">
-              <span>Learn more about us</span>
+              <span>Conozca más sobre nosotros</span>
               <span className="link-with-badge__box">
                 <ArrowRightIcon size={12} />
               </span>
@@ -32,24 +32,24 @@ export const AboutSection: React.FC = () => {
             <div className="about-stats">
               <div className="about-stats__item">
                 <div className="about-stats__value">
-                  31 <span className="about-stats__unit">years</span>
+                  31 <span className="about-stats__unit">años</span>
                 </div>
-                <p className="about-stats__label">in legal and financial services</p>
+                <p className="about-stats__label">en servicios legales y financieros</p>
               </div>
               <div className="about-stats__item">
                 <div className="about-stats__value">2,700+</div>
-                <p className="about-stats__label">HNWI &amp; UHNWI clients under advisory</p>
+                <p className="about-stats__label">clientes patrimoniales y familias asesoradas</p>
               </div>
               <div className="about-stats__item">
                 <div className="about-stats__value">70+</div>
-                <p className="about-stats__label">specialists &amp; global banking partners</p>
+                <p className="about-stats__label">especialistas y aliados bancarios regionales</p>
               </div>
             </div>
 
             <div className="about-section__banner">
               <img
                 src="/images/about-office.jpg"
-                alt="Executives in silhouette inside a modern architectural glass atrium"
+                alt="Ejecutivos en silueta dentro de un atrio arquitectónico moderno de vidrio"
                 width={960}
                 height={400}
               />

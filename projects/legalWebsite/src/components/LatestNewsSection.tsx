@@ -14,9 +14,9 @@ export const LatestNewsSection: React.FC = () => {
 
           <div className="editorial-main-col">
             <div className="news-section__header">
-              <h2 className="news-section__title">Latest news</h2>
+              <h2 className="news-section__title">Últimas noticias</h2>
               <a href="#contact" className="link-with-badge">
-                <span>View all news</span>
+                <span>Ver todas las noticias</span>
                 <span className="link-with-badge__box">
                   <ArrowRightIcon size={12} />
                 </span>
@@ -39,7 +39,7 @@ export const LatestNewsSection: React.FC = () => {
                   <a
                     href="#contact"
                     className="news-row__arrow"
-                    aria-label={`Read article: ${item.title}`}
+                    aria-label={`Leer artículo: ${item.title}`}
                   >
                     <ArrowUpRightIcon size={20} />
                   </a>

@@ -4,7 +4,7 @@ import 'leaflet/dist/leaflet.css';
 import { BrandLogo, ClockIcon, MailIcon, PhoneIcon, PinIcon, SocialIcon } from './Icons';
 import './ContactSection.css';
 
-const BEGOVAYA_COORDS: [number, number] = [55.7765, 37.5512];
+const SAN_JOSE_COORDS: [number, number] = [9.9415, -84.1394];
 
 export const ContactSection: React.FC = () => {
   const [name, setName] = useState('');
@@ -17,7 +17,7 @@ export const ContactSection: React.FC = () => {
   useEffect(() => {
     if (!mapRef.current) return;
     const map = L.map(mapRef.current, {
-      center: BEGOVAYA_COORDS,
+      center: SAN_JOSE_COORDS,
       zoom: 15,
       zoomControl: true,
       attributionControl: true,
@@ -39,9 +39,9 @@ export const ContactSection: React.FC = () => {
       iconAnchor: [14, 40],
     });
 
-    L.marker(BEGOVAYA_COORDS, {
+    L.marker(SAN_JOSE_COORDS, {
       icon,
-      title: '2 Begovaya Street, Moscow, 125284',
+      title: 'Avenida Escazú, Torre Lex, San José, Costa Rica',
     }).addTo(map);
 
     return () => {
@@ -66,16 +66,16 @@ export const ContactSection: React.FC = () => {
     <section id="contact" className="contact-section">
       <div className="container">
         <div className="contact-header">
-          <h2 className="contact-header__title">contact us</h2>
+          <h2 className="contact-header__title">contáctenos</h2>
           <div className="contact-header__social">
-            <span className="contact-header__social-label">Follow us</span>
+            <span className="contact-header__social-label">Síganos</span>
             <div className="contact-social-row">
               {(['Telegram', 'WhatsApp', 'YouTube', 'LinkedIn'] as const).map((net) => (
                 <a
                   key={net}
                   href="#contact"
                   className="contact-social-box"
-                  aria-label={`Mikhailov & Partners on ${net}`}
+                  aria-label={`Méndez & Palacios en ${net}`}
                 >
                   <SocialIcon name={net} />
                 </a>
@@ -89,9 +89,9 @@ export const ContactSection: React.FC = () => {
           <div className="contact-col">
             <div className="contact-info-row">
               <div>
-                <div className="contact-info-label">Write us</div>
-                <a href="mailto:mp@mnp.ru" className="contact-info-value">
-                  mp@mnp.ru
+                <div className="contact-info-label">Escríbanos</div>
+                <a href="mailto:contacto@mp-centroamerica.cr" className="contact-info-value">
+                  contacto@mp-centroamerica.cr
                 </a>
               </div>
               <span className="contact-info-icon">
@@ -101,17 +101,17 @@ export const ContactSection: React.FC = () => {
 
             <div className="contact-info-row">
               <div>
-                <div className="contact-info-label">Our address</div>
-                <div className="contact-info-value">2 Begovaya Street, Moscow, 125284</div>
+                <div className="contact-info-label">Nuestra oficina</div>
+                <div className="contact-info-value">Avenida Escazú, Torre Lex, San José, Costa Rica</div>
               </div>
               <span className="contact-info-icon">
                 <PinIcon />
               </span>
             </div>
 
-            <div className="contact-location-map" role="region" aria-label="Office location map at 2 Begovaya Street">
+            <div className="contact-location-map" role="region" aria-label="Mapa de ubicación en Avenida Escazú, San José">
               <div ref={mapRef} className="contact-leaflet-map" />
-              <span className="contact-location-caption">2 Begovaya Street, Moscow — Private Entrance</span>
+              <span className="contact-location-caption">Avenida Escazú, San José — Acceso privado</span>
             </div>
           </div>
 
@@ -119,9 +119,9 @@ export const ContactSection: React.FC = () => {
           <div className="contact-col">
             <div className="contact-info-row">
               <div>
-                <div className="contact-info-label">Call us</div>
-                <a href="tel:+74951279592" className="contact-info-value">
-                  +7 (495) 127-95-92
+                <div className="contact-info-label">Llámenos</div>
+                <a href="tel:+50622018450" className="contact-info-value">
+                  +506 2201-8450
                 </a>
               </div>
               <span className="contact-info-icon">
@@ -131,8 +131,8 @@ export const ContactSection: React.FC = () => {
 
             <div className="contact-info-row">
               <div>
-                <div className="contact-info-label">Working hours</div>
-                <div className="contact-info-value">Mon–Fri: 9:00–20:00</div>
+                <div className="contact-info-label">Horario de atención</div>
+                <div className="contact-info-value">Lun–Vie: 8:30–18:00</div>
               </div>
               <span className="contact-info-icon">
                 <ClockIcon />
@@ -140,14 +140,14 @@ export const ContactSection: React.FC = () => {
             </div>
 
             <form className="contact-form" onSubmit={handleSubmit} noValidate>
-              <h3 className="contact-form__title">Leave a request</h3>
+              <h3 className="contact-form__title">Solicitar asesoría</h3>
 
               <label className="contact-field">
-                <span className="sr-only">Name</span>
+                <span className="sr-only">Nombre</span>
                 <input
                   type="text"
                   autoComplete="name"
-                  placeholder="*Name"
+                  placeholder="*Nombre"
                   value={name}
                   aria-invalid={status === 'error' && !name.trim()}
                   onChange={(e) => {
@@ -159,12 +159,12 @@ export const ContactSection: React.FC = () => {
               </label>
 
               <label className="contact-field">
-                <span className="sr-only">Phone number</span>
+                <span className="sr-only">Teléfono</span>
                 <input
                   type="tel"
                   autoComplete="tel"
                   inputMode="tel"
-                  placeholder="*Phone number"
+                  placeholder="*Teléfono"
                   value={phone}
                   aria-invalid={status === 'error' && !phone.trim()}
                   onChange={(e) => {
@@ -176,10 +176,10 @@ export const ContactSection: React.FC = () => {
               </label>
 
               <label className="contact-field">
-                <span className="sr-only">Comment</span>
+                <span className="sr-only">Comentario</span>
                 <input
                   type="text"
-                  placeholder="Comment"
+                  placeholder="Comentario"
                   value={comment}
                   onChange={(e) => setComment(e.target.value)}
                 />
@@ -192,23 +192,23 @@ export const ContactSection: React.FC = () => {
                   onChange={(e) => setConsent(e.target.checked)}
                 />
                 <span>
-                  By clicking Submit, I consent to the <u>processing of my personal data</u>.
+                  Al hacer clic en Enviar, autorizo el <u>tratamiento de mis datos personales</u>.
                 </span>
               </label>
 
               {status === 'error' && (
                 <p className="contact-feedback contact-feedback--error" role="alert">
-                  Please fill in your name, phone number, and accept the data processing consent.
+                  Por favor complete su nombre, teléfono y acepte el tratamiento de datos personales.
                 </p>
               )}
               {status === 'submitted' && (
                 <p className="contact-feedback contact-feedback--success" role="status">
-                  Request received. A senior partner will contact you shortly.
+                  Solicitud recibida. Un socio director se pondrá en contacto a la brevedad.
                 </p>
               )}
 
               <button type="submit" className="btn-garnet contact-form__submit">
-                Submit
+                Enviar
               </button>
             </form>
           </div>
@@ -217,8 +217,8 @@ export const ContactSection: React.FC = () => {
         <footer className="footer-bottom">
           <BrandLogo />
           <div className="footer-bottom__meta">
-            <span>&copy; {new Date().getFullYear()} Mikhailov &amp; Partners Private Services Group.</span>
-            <span>Confidentiality &amp; Legal Notice</span>
+            <span>&copy; {new Date().getFullYear()} Méndez &amp; Palacios Grupo de Servicios Privados.</span>
+            <span>Confidencialidad y aviso legal</span>
           </div>
         </footer>
       </div>

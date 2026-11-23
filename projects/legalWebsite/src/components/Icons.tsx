@@ -4,8 +4,8 @@ export const BrandLogo: React.FC = () => (
   <span className="brand-logo">
     <span className="brand-logo__mark">M&amp;P</span>
     <span className="brand-logo__tagline">
-      <strong>Mikhailov &amp; Partners</strong>
-      <span>Private Services Group</span>
+      <strong>Méndez &amp; Palacios</strong>
+      <span>Grupo de Servicios Privados</span>
     </span>
   </span>
 );

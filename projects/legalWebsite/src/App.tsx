@@ -12,7 +12,7 @@ export const App: React.FC = () => {
   return (
     <>
       <a href="#main" className="skip-link">
-        Skip to content
+        Saltar al contenido
       </a>
       <Navbar />
       <main id="main" tabIndex={-1}>

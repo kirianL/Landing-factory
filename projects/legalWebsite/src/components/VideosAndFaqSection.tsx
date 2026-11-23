@@ -40,13 +40,13 @@ export const VideosAndFaqSection: React.FC = () => {
             <div className="videos-header">
               <div>
                 <h2 className="videos-header__title">Videos</h2>
-                <p className="videos-header__sub">Concise legal briefings on complex questions</p>
+                <p className="videos-header__sub">Cápsulas jurídicas breves sobre consultas frecuentes</p>
               </div>
               <div className="videos-header__controls">
                 <button
                   type="button"
                   className="icon-square-btn"
-                  aria-label="Previous video"
+                  aria-label="Video anterior"
                   disabled={videoIdx === 0}
                   onClick={() => setVideoIdx((i) => Math.max(0, i - 1))}
                 >
@@ -55,7 +55,7 @@ export const VideosAndFaqSection: React.FC = () => {
                 <button
                   type="button"
                   className="icon-square-btn"
-                  aria-label="Next video"
+                  aria-label="Siguiente video"
                   disabled={videoIdx >= VIDEOS.length - 2}
                   onClick={() => setVideoIdx((i) => Math.min(VIDEOS.length - 2, i + 1))}
                 >
@@ -74,7 +74,7 @@ export const VideosAndFaqSection: React.FC = () => {
                       lastTriggerRef.current = e.currentTarget;
                       setActiveVideo(video);
                     }}
-                    aria-label={`Preview briefing: ${video.title}`}
+                    aria-label={`Ver adelanto: ${video.title}`}
                   >
                     <img src={video.thumbnail} alt="" width={480} height={270} loading="lazy" />
                     <span className="video-card__play" aria-hidden="true">
@@ -93,7 +93,7 @@ export const VideosAndFaqSection: React.FC = () => {
         {/* Dual-tone FAQ cards from reference */}
         <div className="editorial-grid faq-row">
           <div className="editorial-eyebrow-col">
-            <h2 className="eyebrow eyebrow--dark">Client Q&amp;A</h2>
+            <h2 className="eyebrow eyebrow--dark">Preguntas frecuentes</h2>
           </div>
           <div className="editorial-main-col">
             <div className="faq-cards-grid">
@@ -110,7 +110,7 @@ export const VideosAndFaqSection: React.FC = () => {
                   <div className="faq-card__bottom">
                     <p className="faq-card__answer">{card.answer}</p>
                     <a href="#contact" className="link-with-badge">
-                      <span>Learn more</span>
+                      <span>Conocer más</span>
                       <span className="link-with-badge__box">
                         <ArrowRightIcon size={12} />
                       </span>
@@ -137,7 +137,7 @@ export const VideosAndFaqSection: React.FC = () => {
               <button
                 ref={closeModalRef}
                 type="button"
-                aria-label="Close briefing preview"
+                aria-label="Cerrar vista previa"
                 onClick={closeModal}
                 className="video-modal__close"
               >
@@ -147,7 +147,7 @@ export const VideosAndFaqSection: React.FC = () => {
             <div className="video-modal__preview">
               <img src={activeVideo.thumbnail} alt="" width={640} height={360} />
               <div className="video-modal__badge">
-                Briefing Preview ({activeVideo.duration}) — Request full recording via consultation
+                Vista previa ({activeVideo.duration}) — Solicite la grabación completa mediante consulta
               </div>
             </div>
             <p className="video-modal__desc">{activeVideo.description}</p>

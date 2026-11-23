@@ -6,7 +6,7 @@ import './Navbar.css';
 export const Navbar: React.FC = () => {
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [mobileExpanded, setMobileExpanded] = useState<string | null>('Key Topics');
+  const [mobileExpanded, setMobileExpanded] = useState<string | null>('Temas clave');
   const burgerRef = useRef<HTMLButtonElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
 
@@ -41,11 +41,11 @@ export const Navbar: React.FC = () => {
     <>
       <header className="site-header">
       <div className="container site-header__inner">
-        <a href="#top" className="site-header__brand" aria-label="M&P Mikhailov & Partners Home">
+        <a href="#top" className="site-header__brand" aria-label="Inicio M&P Méndez & Palacios">
           <BrandLogo />
         </a>
 
-        <nav className="site-nav" aria-label="Primary Navigation">
+        <nav className="site-nav" aria-label="Navegación principal">
           {NAV_ITEMS.map((item) => {
             const hasSub = Boolean(item.subItems?.length);
             const isOpen = openDropdown === item.label;
@@ -100,11 +100,11 @@ export const Navbar: React.FC = () => {
         </nav>
 
         <div className="site-header__actions">
-          <a href="tel:+74951279592" className="site-header__phone">
-            +7 (495) 127-95-92
+          <a href="tel:+50622018450" className="site-header__phone">
+            +506 2201-8450
           </a>
           <a href="#contact" className="btn-garnet site-header__cta">
-            Contact us
+            Contáctenos
           </a>
         </div>
 
@@ -112,7 +112,7 @@ export const Navbar: React.FC = () => {
           ref={burgerRef}
           type="button"
           className="site-header__burger"
-          aria-label="Open navigation menu"
+          aria-label="Abrir menú de navegación"
           aria-expanded={mobileOpen}
           onClick={() => setMobileOpen(true)}
         >
@@ -124,7 +124,7 @@ export const Navbar: React.FC = () => {
 
       {/* Mobile Fullscreen Drawer (outside header so backdrop-filter doesn't trap fixed positioning) */}
       {mobileOpen && (
-        <div className="mobile-drawer" role="dialog" aria-modal="true" aria-label="Mobile Navigation">
+        <div className="mobile-drawer" role="dialog" aria-modal="true" aria-label="Navegación móvil">
           <div className="mobile-drawer__top">
             <a href="#top" onClick={() => setMobileOpen(false)}>
               <BrandLogo />
@@ -133,7 +133,7 @@ export const Navbar: React.FC = () => {
               ref={closeRef}
               type="button"
               className="mobile-drawer__close"
-              aria-label="Close navigation menu"
+              aria-label="Cerrar menú de navegación"
               onClick={() => {
                 setMobileOpen(false);
                 burgerRef.current?.focus();
@@ -192,16 +192,16 @@ export const Navbar: React.FC = () => {
           </nav>
 
           <div className="mobile-drawer__footer">
-            <a href="tel:+74951279592" className="mobile-drawer__phone">
+            <a href="tel:+50622018450" className="mobile-drawer__phone">
               <PhoneIcon />
-              <span>+7 (495) 127-95-92</span>
+              <span>+506 2201-8450</span>
             </a>
             <a
               href="#contact"
               className="btn-garnet mobile-drawer__cta"
               onClick={() => setMobileOpen(false)}
             >
-              Contact us
+              Contáctenos
             </a>
           </div>
         </div>

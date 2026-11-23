@@ -2,7 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { geoMercator, geoPath } from 'd3-geo';
 import { feature } from 'topojson-client';
 import type { Topology, GeometryCollection } from 'topojson-specification';
-import topologyData from 'world-atlas/countries-110m.json';
+import topologyData from 'world-atlas/countries-50m.json';
 import { PARTNER_PINS } from '../data/content';
 import type { PartnerPin } from '../data/content';
 import './PartnersMapSection.css';
@@ -10,11 +10,12 @@ import './PartnersMapSection.css';
 const WIDTH = 720;
 const HEIGHT = 460;
 const HIGHLIGHTED = new Set([
-  'Russia',
-  'China',
-  'United Arab Emirates',
-  'Cyprus',
-  'Switzerland',
+  'Costa Rica',
+  'Panama',
+  'Guatemala',
+  'El Salvador',
+  'Honduras',
+  'Nicaragua',
 ]);
 
 interface CountryProperties {
@@ -26,8 +27,8 @@ export const PartnersMapSection: React.FC = () => {
 
   const { countryPaths, pins } = useMemo(() => {
     const projection = geoMercator()
-      .center([62, 36])
-      .scale(245)
+      .center([-84.8, 12.1])
+      .scale(1750)
       .translate([WIDTH / 2, HEIGHT / 2]);
     const pathGen = geoPath(projection);
 
@@ -62,14 +63,14 @@ export const PartnersMapSection: React.FC = () => {
     <section id="partners" className="partners-section">
       <div className="container partners-grid">
         <div className="partners-info">
-          <span className="eyebrow eyebrow--dark">Global Network</span>
-          <h2 className="partners-info__title">70+ partners worldwide</h2>
+          <span className="eyebrow eyebrow--dark">Red regional</span>
+          <h2 className="partners-info__title">70+ aliados en Centroamérica</h2>
           <p className="partners-info__desc">
-            Banks, financial institutions, law and audit firms, and real estate agencies across key wealth
-            jurisdictions.
+            Bancos, entidades financieras, firmas legales, auditoras y asesoras inmobiliarias en las principales plazas
+            de la región.
           </p>
           <a href="#contact" className="btn-garnet partners-info__cta">
-            Become a partner
+            Ser aliado
           </a>
 
           {/* Active jurisdiction card */}
@@ -90,9 +91,9 @@ export const PartnersMapSection: React.FC = () => {
             viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
             className="partners-map"
             role="group"
-            aria-label="Interactive map of M&P global banking and legal partners"
+            aria-label="Mapa interactivo de aliados bancarios y legales de M&P en Centroamérica"
           >
-            <title>Interactive map of M&amp;P global banking and legal partners</title>
+            <title>Mapa interactivo de aliados bancarios y legales de M&amp;P en Centroamérica</title>
             <g className="map-countries">
               {countryPaths.map((c) => (
                 <path
@@ -101,7 +102,7 @@ export const PartnersMapSection: React.FC = () => {
                   fill={c.highlighted ? 'var(--accent-garnet)' : 'var(--map-land)'}
                   fillOpacity={c.highlighted ? 0.94 : 0.88}
                   stroke="var(--bg-dark)"
-                  strokeWidth={0.4}
+                  strokeWidth={0.5}
                 />
               ))}
             </g>
@@ -109,6 +110,11 @@ export const PartnersMapSection: React.FC = () => {
             {/* Interactive Country Pins */}
             {pins.map((pin) => {
               const isSelected = selectedPin.id === pin.id;
+              const badgeWidth = pin.country.length * 7.2 + 16;
+              const isLeft = pin.labelSide === 'left';
+              const rectX = isLeft ? -12 - badgeWidth : 12;
+              const textX = isLeft ? -12 - badgeWidth + 8 : 20;
+
               return (
                 <g
                   key={pin.id}
@@ -124,7 +130,7 @@ export const PartnersMapSection: React.FC = () => {
                   }}
                   tabIndex={0}
                   role="button"
-                  aria-label={`Select ${pin.country} partners`}
+                  aria-label={`Seleccionar aliados en ${pin.country}`}
                   aria-pressed={isSelected}
                 >
                   <circle r={16} fill="transparent" className="map-pin__hit" />
@@ -136,16 +142,16 @@ export const PartnersMapSection: React.FC = () => {
                     className="map-pin__dot"
                   />
                   <rect
-                    x={12}
+                    x={rectX}
                     y={-11}
-                    width={pin.country.length * 7.2 + 16}
+                    width={badgeWidth}
                     height={22}
                     rx={2}
                     fill={isSelected ? 'var(--text-on-dark)' : 'rgba(23, 0, 0, 0.9)'}
                     className="map-pin__badge"
                   />
                   <text
-                    x={20}
+                    x={textX}
                     y={3.5}
                     fontSize="11"
                     fontWeight={isSelected ? 600 : 400}
